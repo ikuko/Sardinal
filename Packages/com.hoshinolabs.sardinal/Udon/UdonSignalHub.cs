@@ -38,10 +38,8 @@ namespace HoshinoLabs.Sardinal.Udon {
                 var ___2 = __2[i];
                 var ___4 = __4[i];
                 for (var j = 0; j < ___4.Length; j++) {
-                    Debug.Log($"param {___4[i]}:{args[j]}");
                     ___2.SetProgramVariable(___4[j], args[j]);
                 }
-                Debug.Log($"call {__3[i]}");
                 ___2.SendCustomEvent(__3[i]);
             }
         }
