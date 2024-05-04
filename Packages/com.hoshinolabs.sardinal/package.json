@@ -1,0 +1,19 @@
+{
+  "name": "com.hoshinolabs.sardinal",
+  "displayName": "HoshinoLabs - Sardinal",
+  "version": "0.0.1",
+  "unity": "2022.3",
+  "description": "",
+  "vrchatVersion": "2022.1.1",
+  "author": {
+    "name": "ikuko",
+    "email": "magi.ikuko@gmail.com",
+    "url": "https://hoshinolabs.com"
+  },
+  "dependencies": {
+  },
+  "vpmDependencies": {
+    "com.vrchat.worlds": ">=3.5.1",
+    "com.hoshinolabs.vrchat.sardinject": ">=0.3.3"
+  }
+}
