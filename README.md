@@ -75,7 +75,7 @@ public class SardinalDemo : UdonSharpBehaviour {
     public void OnProcessScene(Scene scene, BuildReport report) {
       var context = new Context();
       context.Enqueue(builder => {
-        builder.AddInHierarchy<HelloSardine>();
+        builder.AddInHierarchy<SardinalDemo>();
       });
       context.Build();
     }
