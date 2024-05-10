@@ -1,9 +1,9 @@
 {
   "name": "com.hoshinolabs.sardinal",
   "displayName": "HoshinoLabs - Sardinal",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "unity": "2022.3",
-  "description": "",
+  "description": "Sardinal is a messaging system for VRChat Udon#. It supports Pub/Sub with parameters.",
   "vrchatVersion": "2022.1.1",
   "author": {
     "name": "ikuko",
@@ -13,7 +13,7 @@
   "dependencies": {
   },
   "vpmDependencies": {
-    "com.vrchat.worlds": ">=3.5.1",
+    "com.vrchat.worlds": ">=3.6.0",
     "com.hoshinolabs.vrchat.sardinject": ">=0.3.3"
   }
 }
