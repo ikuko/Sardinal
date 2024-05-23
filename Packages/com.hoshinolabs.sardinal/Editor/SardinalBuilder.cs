@@ -18,7 +18,6 @@ namespace HoshinoLabs.Sardinal {
 
         public void OnProcessScene(Scene scene, BuildReport report) {
             ProjectContext.Resolver += Resolver;
-
             ProjectContext.Enqueue(builder => {
                 var subscriberData = BuildSubscriberData();
 
@@ -42,10 +41,12 @@ namespace HoshinoLabs.Sardinal {
         }
 
         static object Resolver(Container container, Type type, IEnumerable<Attribute> attributes) {
-            var attribute = attributes.Where(x => x.GetType() == typeof(SignalIdAttribute)).FirstOrDefault() as SignalIdAttribute;
-            if (attribute != null) {
-                var signalId = attribute.BindTo.FullName.ComputeHashMD5();
-                return signalId;
+            foreach (var x in attributes) {
+                switch (x) {
+                    case SignalIdAttribute attribute: {
+                            return SardinalExtensions.GetRuntimeSignalId(attribute.BindTo);
+                        }
+                }
             }
             return null;
         }
