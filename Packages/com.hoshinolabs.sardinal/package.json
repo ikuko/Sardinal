@@ -14,6 +14,6 @@
   },
   "vpmDependencies": {
     "com.vrchat.worlds": ">=3.6.0",
-    "com.hoshinolabs.vrchat.sardinject": ">=0.3.3"
+    "com.hoshinolabs.vrchat.sardinject": ">=0.4.0"
   }
 }
