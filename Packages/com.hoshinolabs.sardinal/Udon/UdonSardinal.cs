@@ -9,7 +9,7 @@ using VRC.Udon.Common.Interfaces;
 namespace HoshinoLabs.Sardinal.Udon {
     [AddComponentMenu("")]
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
-    internal sealed class UdonSignalHub : ISignalHub {
+    internal sealed class UdonSardinal : ISardinal {
         [Inject, SerializeField, HideInInspector]
         int _0;
         [Inject, SerializeField, HideInInspector]

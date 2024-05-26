@@ -26,7 +26,7 @@ namespace HoshinoLabs.Sardinal {
                     Lifetime.Cached,
                     $"{SardinalTypeResolver.ImplementationType.Name}"
                 )
-                    .As<ISignalHub>()
+                    .As<ISardinal>()
                     .UnderTransform(() => {
                         var go = new GameObject($"__{GetType().Namespace.Replace('.', '_')}__");
                         go.hideFlags = HideFlags.HideInHierarchy;
@@ -51,8 +51,9 @@ namespace HoshinoLabs.Sardinal {
             return null;
         }
 
-        SubscriberData[] BuildSubscriberData(MethodInfo[] methods, Type type, MethodInfo method) {
+        SubscriberData[] BuildSubscriberData(Type type, MethodInfo[] methods, MethodInfo method) {
             var exportMethods = methods
+                .Where(x => x.Name == method.Name)
                 .Where(x => 0 < x.GetParameters().Length)
                 .ToArray();
             var methodId = Array.IndexOf(exportMethods, method);
@@ -91,7 +92,7 @@ namespace HoshinoLabs.Sardinal {
                             method.GetParameters().Select(x => $"__{x.ParameterType.FullName.Replace(".", "")}");
                             return (
                                 signature,
-                                subscribers: BuildSubscriberData(methods.Where(x => x.Name == method.Name).ToArray(), type, method)
+                                subscribers: BuildSubscriberData(type, methods, method)
                             );
                         });
                 })

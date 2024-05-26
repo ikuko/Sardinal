@@ -5,6 +5,6 @@ using UnityEngine;
 
 namespace HoshinoLabs.Sardinal.Udon {
     public static class SardinalTypeResolver {
-        public static Type ImplementationType => typeof(UdonSignalHub);
+        public static Type ImplementationType => typeof(UdonSardinal);
     }
 }
