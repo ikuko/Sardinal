@@ -16,12 +16,12 @@ MonoBehaviour:
     type: 2}
   udonAssembly: 
   assemblyError: 
-  sourceCsScript: {fileID: 11500000, guid: 1427e4e3713f5b5459e2ac5ddcd3b30f, type: 3}
+  sourceCsScript: {fileID: 11500000, guid: 8901165b440f77a49a7026e240a9d425, type: 3}
   scriptVersion: 2
   compiledVersion: 2
   behaviourSyncMode: 1
   hasInteractEvent: 0
-  scriptID: -3944346882440843451
+  scriptID: -1013557676666944196
   serializationData:
     SerializedFormat: 2
     SerializedBytes: 
