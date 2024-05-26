@@ -8,12 +8,7 @@ Sardinal is a messaging system for VRChat Udon#. It supports Pub/Sub with parame
 SardinalはVRChat Udon#用のメッセージングシステムです。  
 パラメータ付きのPub/Subをサポートしています。
 
-- **引数付きのPub/Subが可能:** メッセージを送る際に任意個の引数を付けることができます。
-- **相手を知らずに送信:** メッセージを送る際に相手のイベント名やインスタンスを知る必要はありません。
-
 ## Features
-
-- ランタイムでのSubscribe
 
 ## Documentation
 
@@ -61,12 +56,12 @@ public abstract class SardineSignal { }
 
 public class SardinalDemo : UdonSharpBehaviour {
   [Inject, SerializeField, HideInInspector]
-  ISignalHub signal;
+  ISardinal sardinal;
   [Inject, SignalId(typeof(SardineSignal)), SerializeField, HideInInspector]
   object signalId;
 
   private void Start() {
-    signal.Publish(signalId, $"Sardinal");
+    sardinal.Publish(signalId, $"Sardinal");
   }
 
 #if UNITY_EDITOR
