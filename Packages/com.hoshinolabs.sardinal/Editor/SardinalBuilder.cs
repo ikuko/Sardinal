@@ -81,9 +81,9 @@ namespace HoshinoLabs.Sardinal {
                 .SelectMany(type => {
                     var methods = type.GetMethods(BindingFlags.Instance | BindingFlags.Public);
                     return methods
-                        .Where(x => x.IsDefined(typeof(SignalSubscriberAttribute)))
+                        .Where(x => x.IsDefined(typeof(SubscriberAttribute)))
                         .Select(method => {
-                            var attribute = method.GetCustomAttribute<SignalSubscriberAttribute>();
+                            var attribute = method.GetCustomAttribute<SubscriberAttribute>();
                             var signalId = attribute.BindTo.FullName.ComputeHashMD5();
                             var signature = $"{signalId}.";
                             foreach (var parameter in method.GetParameters()) {
