@@ -8,12 +8,7 @@ namespace HoshinoLabs.Sardinal.Udon {
     [AddComponentMenu("")]
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
     public class ISardinal : UdonSharpBehaviour {
-        public virtual void Publish(object signalId, params object[] args) {
-
-        }
-
-        //public virtual void Subscribe(object signalId, IUdonEventReceiver subscriber) {
-
-        //}
+        public virtual void Publish(SignalId id, params object[] args) { }
+        //public virtual void Subscribe(SignalId signalId, IUdonEventReceiver subscriber) { }
     }
 }

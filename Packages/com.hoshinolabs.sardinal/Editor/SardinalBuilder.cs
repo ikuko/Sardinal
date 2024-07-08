@@ -14,41 +14,22 @@ using VRC.Udon;
 
 namespace HoshinoLabs.Sardinal {
     internal sealed class SardinalBuilder : IProcessSceneWithReport {
-        public int callbackOrder => -100;
+        public int callbackOrder => 1;
 
         public void OnProcessScene(Scene scene, BuildReport report) {
-            ProjectContext.Resolver += Resolver;
-            ProjectContext.Enqueue(builder => {
+            var context = new Context();
+            context.Enqueue(builder => {
                 var subscriberData = BuildSubscriberData();
 
-                builder.AddOnNewGameObject(
-                    SardinalTypeResolver.ImplementationType,
-                    Lifetime.Cached,
-                    $"{SardinalTypeResolver.ImplementationType.Name}"
-                )
+                builder.AddInHierarchy(SardinalTypeResolver.ImplementationType)
                     .As<ISardinal>()
-                    .UnderTransform(() => {
-                        var go = new GameObject($"__{GetType().Namespace.Replace('.', '_')}__");
-                        go.hideFlags = HideFlags.HideInHierarchy;
-                        return go.transform;
-                    })
                     .WithParameter("_0", subscriberData._0)
                     .WithParameter("_1", subscriberData._1)
                     .WithParameter("_2", subscriberData._2)
                     .WithParameter("_3", subscriberData._3)
                     .WithParameter("_4", subscriberData._4);
             });
-        }
-
-        static object Resolver(Container container, Type type, IEnumerable<Attribute> attributes) {
-            foreach (var x in attributes) {
-                switch (x) {
-                    case SignalIdAttribute attribute: {
-                            return SardinalExtensions.GetRuntimeSignalId(attribute.BindTo);
-                        }
-                }
-            }
-            return null;
+            context.Build();
         }
 
         SubscriberData[] BuildSubscriberData(Type type, MethodInfo[] methods, MethodInfo method) {
