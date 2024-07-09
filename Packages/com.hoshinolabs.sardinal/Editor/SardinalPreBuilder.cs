@@ -9,14 +9,14 @@ using UnityEngine.SceneManagement;
 
 namespace HoshinoLabs.Sardinal {
     internal sealed class SardinalPreBuilder : IProcessSceneWithReport {
-        public int callbackOrder => -100;
+        public int callbackOrder => -5000;
 
         public void OnProcessScene(Scene scene, BuildReport report) {
             ProjectContext.Enqueue(builder => {
                 builder.AddOnNewGameObject(
                     SardinalTypeResolver.ImplementationType,
                     Lifetime.Cached,
-                    $"{SardinalTypeResolver.ImplementationType.Name}"
+                    SardinalTypeResolver.ImplementationType.Name
                 )
                     .As<ISardinal>()
                     .UnderTransform(() => {

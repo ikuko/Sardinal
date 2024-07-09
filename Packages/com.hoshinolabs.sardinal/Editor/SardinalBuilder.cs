@@ -13,10 +13,8 @@ using UnityEngine.SceneManagement;
 using VRC.Udon;
 
 namespace HoshinoLabs.Sardinal {
-    internal sealed class SardinalBuilder : IProcessSceneWithReport {
-        public int callbackOrder => 1;
-
-        public void OnProcessScene(Scene scene, BuildReport report) {
+    internal static class SardinalBuilder {
+        public static void Build() {
             var context = new Context();
             context.Enqueue(builder => {
                 var subscriberData = BuildSubscriberData();
@@ -32,7 +30,7 @@ namespace HoshinoLabs.Sardinal {
             context.Build();
         }
 
-        SubscriberData[] BuildSubscriberData(Type type, MethodInfo[] methods, MethodInfo method) {
+        static SubscriberData[] BuildSubscriberData(Type type, MethodInfo[] methods, MethodInfo method) {
             var exportMethods = methods
                 .Where(x => x.Name == method.Name)
                 .Where(x => 0 < x.GetParameters().Length)
@@ -56,7 +54,7 @@ namespace HoshinoLabs.Sardinal {
                 .ToArray();
         }
 
-        (int _0, string[] _1, UdonBehaviour[][] _2, string[][] _3, string[][][] _4) BuildSubscriberData() {
+        static (int _0, string[] _1, UdonBehaviour[][] _2, string[][] _3, string[][][] _4) BuildSubscriberData() {
             var subscriberData = AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(x => x.GetTypes())
                 .SelectMany(type => {
