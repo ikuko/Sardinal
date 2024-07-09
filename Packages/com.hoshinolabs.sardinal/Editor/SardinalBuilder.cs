@@ -6,10 +6,7 @@ using System.Linq;
 using System.Reflection;
 using UdonSharp;
 using UdonSharpEditor;
-using UnityEditor.Build;
-using UnityEditor.Build.Reporting;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using VRC.Udon;
 
 namespace HoshinoLabs.Sardinal {

@@ -1,3 +1,4 @@
+using HoshinoLabs.Sardinal.Udon;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
@@ -12,11 +13,14 @@ namespace HoshinoLabs.Sardinal {
         public int callbackOrder => -5001;
 
         public void OnProcessScene(Scene scene, BuildReport report) {
-            var _serializer = typeof(Serializer);
-            var _typeCheckSerializers = _serializer.GetField("_typeCheckSerializers", BindingFlags.Static | BindingFlags.NonPublic);
-            var typeCheckSerializers = (List<Serializer>)_typeCheckSerializers.GetValue(_serializer);
+            var typeCheckSerializersField = typeof(Serializer).GetField("_typeCheckSerializers", BindingFlags.Static | BindingFlags.NonPublic);
+            var typeCheckSerializers = (List<Serializer>)typeCheckSerializersField.GetValue(null);
             typeCheckSerializers.RemoveAll(x => x.GetType() == typeof(SardinalSerializer));
             typeCheckSerializers.Insert(0, new SardinalSerializer(null));
+
+            var typeSerializerDictionaryField = typeof(Serializer).GetField("_typeSerializerDictionary", BindingFlags.Static | BindingFlags.NonPublic);
+            var typeSerializerDictionary = (Dictionary<TypeSerializationMetadata, Serializer>)typeSerializerDictionaryField.GetValue(null);
+            typeSerializerDictionary.Remove(new TypeSerializationMetadata(SardinalTypeResolver.ImplementationType));
         }
     }
 }
