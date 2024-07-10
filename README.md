@@ -44,7 +44,7 @@ vpm add com.hoshinolabs.sardinal
 
 ```csharp
 public class HelloSardine : UdonSharpBehaviour {
-  [SignalSubscriber(typeof(SardineSignal))]
+  [Subscriber(typeof(SardineSignal))]
   public void Hello(string arg) {
     Debug.Log($"Hello {arg}.");
   }
@@ -57,8 +57,8 @@ public abstract class SardineSignal { }
 public class SardinalDemo : UdonSharpBehaviour {
   [Inject, SerializeField, HideInInspector]
   ISardinal sardinal;
-  [Inject, SignalId(typeof(SardineSignal)), SerializeField, HideInInspector]
-  object signalId;
+  [SerializeField]
+  SignalId signalId = new SignalId<SardineSignal>();
 
   private void Start() {
     sardinal.Publish(signalId, $"Sardinal");
