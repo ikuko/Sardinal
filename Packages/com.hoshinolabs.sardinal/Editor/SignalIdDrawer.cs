@@ -10,8 +10,10 @@ namespace HoshinoLabs.Sardinal {
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
             EditorGUI.BeginProperty(position, label, property);
 
-            var bindToProperty = property.FindPropertyRelative("_serialized");
-            EditorGUI.PropertyField(position, bindToProperty, label);
+            using (new EditorGUI.DisabledGroupScope(true)) {
+                var bindToProperty = property.FindPropertyRelative("_serialized");
+                EditorGUI.PropertyField(position, bindToProperty, label);
+            }
             EditorGUI.EndProperty();
         }
 
