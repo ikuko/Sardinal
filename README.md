@@ -61,7 +61,7 @@ public class SardinalDemo : UdonSharpBehaviour {
   SignalId signalId = new SignalId<SardineSignal>();
 
   private void Start() {
-    sardinal.Publish(signalId, $"Sardinal");
+    sardinal.Publish(signalId, null, $"Sardinal");
   }
 
 #if UNITY_EDITOR
@@ -69,7 +69,7 @@ public class SardinalDemo : UdonSharpBehaviour {
     public int callbackOrder => 0;
 
     public void OnProcessScene(Scene scene, BuildReport report) {
-      var context = new Context();
+      var context = ProjectContext.New();
       context.Enqueue(builder => {
         builder.AddInHierarchy<SardinalDemo>();
       });

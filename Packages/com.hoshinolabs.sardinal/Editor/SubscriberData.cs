@@ -1,16 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using VRC.Udon;
+using VRC.Udon.Common.Interfaces;
 
 namespace HoshinoLabs.Sardinal {
     internal sealed class SubscriberData {
-        public UdonBehaviour Udon { get; }
-        public MethodSymbolData MethodSymbolData { get; }
+        public string Signature { get; }
+        public IUdonEventReceiver Receiver { get; }
+        public object Channel { get; }
+        public int SchemaId { get; }
 
-        public SubscriberData(UdonBehaviour udon, MethodSymbolData methodSymbolData) {
-            Udon = udon;
-            MethodSymbolData = methodSymbolData;
+        public SubscriberData(string signature, IUdonEventReceiver receiver, object channel, int schemaId) {
+            Signature = signature;
+            Receiver = receiver;
+            Channel = channel;
+            SchemaId = schemaId;
         }
     }
 }
