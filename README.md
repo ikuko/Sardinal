@@ -1,7 +1,7 @@
 # Sardinal
 
 ![](https://img.shields.io/badge/unity-2022.3+-000.svg)
-[![Releases](https://img.shields.io/github/release/hoshinolabs/Localization.svg)](https://github.com/hoshinolabs/Localization/releases)
+[![Releases](https://img.shields.io/github/release/hoshinolabs/Sardinal.svg)](https://github.com/hoshinolabs/Sardinal/releases)
 
 Sardinal is a messaging system for VRChat Udon#. It supports Pub/Sub with parameters.  
   
