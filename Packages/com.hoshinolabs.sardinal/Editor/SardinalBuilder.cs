@@ -19,7 +19,7 @@ namespace HoshinoLabs.Sardinal {
                 var subscriberData = BuildSubscriberData(subscriberSchema);
                 var schemaData = BuildSchemaData(subscriberSchema);
 
-                builder.AddInHierarchy(SardinalTypeResolver.ImplementationType)
+                builder.AddInHierarchy(ISardinal.ImplementationType)
                     .As<ISardinal>()
                     .WithParameter("_0_0", subscriberData._0)
                     .WithParameter("_0_1", subscriberData._1)
@@ -30,7 +30,8 @@ namespace HoshinoLabs.Sardinal {
                     .WithParameter("_1_0", schemaData._0)
                     .WithParameter("_1_1", schemaData._1)
                     .WithParameter("_1_2", schemaData._2)
-                    .WithParameter("_1_3", schemaData._3);
+                    .WithParameter("_1_3", schemaData._3)
+                    .WithParameter("_1_4", schemaData._4);
             });
             context.Build();
         }
@@ -97,12 +98,13 @@ namespace HoshinoLabs.Sardinal {
                 );
         }
 
-        static (int _0, long[] _1, string[] _2, string[][] _3) BuildSchemaData(SubscriberSchema[] subscriberSchema) {
+        static (int _0, string[] _1, long[] _2, string[] _3, string[][] _4) BuildSchemaData(SubscriberSchema[] subscriberSchema) {
             return (
                 _0: subscriberSchema.Length,
-                _1: subscriberSchema.Select(x => UdonSharpInternalUtility.GetTypeID(x.Type)).ToArray(), 
-                _2: subscriberSchema.Select(x => x.MethodSymbol).ToArray(),
-                _3: subscriberSchema.Select(x => x.ParameterSymbols).ToArray()
+                _1: subscriberSchema.Select(x => x.Signature).ToArray(),
+                _2: subscriberSchema.Select(x => UdonSharpInternalUtility.GetTypeID(x.Type)).ToArray(), 
+                _3: subscriberSchema.Select(x => x.MethodSymbol).ToArray(),
+                _4: subscriberSchema.Select(x => x.ParameterSymbols).ToArray()
             );
         }
     }

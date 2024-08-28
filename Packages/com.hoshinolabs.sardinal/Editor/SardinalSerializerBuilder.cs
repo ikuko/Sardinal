@@ -20,7 +20,7 @@ namespace HoshinoLabs.Sardinal {
 
             var typeSerializerDictionaryField = typeof(Serializer).GetField("_typeSerializerDictionary", BindingFlags.Static | BindingFlags.NonPublic);
             var typeSerializerDictionary = (Dictionary<TypeSerializationMetadata, Serializer>)typeSerializerDictionaryField.GetValue(null);
-            typeSerializerDictionary.Remove(new TypeSerializationMetadata(SardinalTypeResolver.ImplementationType));
+            typeSerializerDictionary.Remove(new TypeSerializationMetadata(ISardinal.ImplementationType));
         }
     }
 }

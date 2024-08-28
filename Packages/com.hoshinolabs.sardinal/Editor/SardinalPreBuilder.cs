@@ -14,9 +14,9 @@ namespace HoshinoLabs.Sardinal {
         public void OnProcessScene(Scene scene, BuildReport report) {
             ProjectContext.Enqueue(builder => {
                 builder.AddOnNewGameObject(
-                    SardinalTypeResolver.ImplementationType,
+                    ISardinal.ImplementationType,
                     Lifetime.Cached,
-                    SardinalTypeResolver.ImplementationType.Name
+                    ISardinal.ImplementationType.Name
                 )
                     .As<ISardinal>()
                     .UnderTransform(() => {

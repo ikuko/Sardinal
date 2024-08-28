@@ -18,7 +18,7 @@ namespace HoshinoLabs.Sardinal {
 
         protected override bool HandlesTypeSerialization(TypeSerializationMetadata typeMetadata) {
             VerifyTypeCheckSanity();
-            if (typeMetadata.cSharpType == SardinalTypeResolver.ImplementationType) {
+            if (typeMetadata.cSharpType == ISardinal.ImplementationType) {
                 SardinalBuilder.Build();
             }
             return false;

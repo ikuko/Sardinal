@@ -7,11 +7,11 @@ namespace HoshinoLabs.Sardinal.Udon {
     [Serializable]
     public class SignalId : ISerializationCallbackReceiver {
         [SerializeField]
-        public Type BindTo;
+        public Type Topic;
 
 
-        public SignalId(Type bindTo) {
-            BindTo = bindTo;
+        public SignalId(Type topic) {
+            Topic = topic;
         }
 
         [SerializeField]
@@ -22,7 +22,7 @@ namespace HoshinoLabs.Sardinal.Udon {
         }
 
         public void OnBeforeSerialize() {
-            _serialized = BindTo?.FullName;
+            _serialized = Topic?.FullName;
         }
     }
 

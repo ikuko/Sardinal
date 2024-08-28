@@ -11,8 +11,8 @@ namespace HoshinoLabs.Sardinal {
             EditorGUI.BeginProperty(position, label, property);
 
             using (new EditorGUI.DisabledGroupScope(true)) {
-                var bindToProperty = property.FindPropertyRelative("_serialized");
-                EditorGUI.PropertyField(position, bindToProperty, label);
+                var topicProperty = property.FindPropertyRelative("_serialized");
+                EditorGUI.PropertyField(position, topicProperty, label);
             }
             EditorGUI.EndProperty();
         }
