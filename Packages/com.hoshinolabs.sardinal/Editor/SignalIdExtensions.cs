@@ -6,11 +6,11 @@ using UnityEngine;
 namespace HoshinoLabs.Sardinal {
     internal static class SignalIdExtensions {
         public static object Pack(this SignalId self) {
-            if (self.Topic == null) {
+            if (self.GetTopic() == null) {
                 return null;
             }
             return new[] {
-                self.Topic.FullName.ComputeHashMD5(),
+                self.GetTopic().ComputeHashMD5(),
             };
         }
 

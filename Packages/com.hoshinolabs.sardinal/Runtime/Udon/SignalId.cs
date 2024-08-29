@@ -5,24 +5,14 @@ using UnityEngine;
 
 namespace HoshinoLabs.Sardinal.Udon {
     [Serializable]
-    public class SignalId : ISerializationCallbackReceiver {
+    public class SignalId {
         [SerializeField]
-        public Type Topic;
+        string topic;
 
+        public string GetTopic() => topic;
 
         public SignalId(Type topic) {
-            Topic = topic;
-        }
-
-        [SerializeField]
-        string _serialized;
-
-        public void OnAfterDeserialize() {
-
-        }
-
-        public void OnBeforeSerialize() {
-            _serialized = Topic?.FullName;
+            this.topic = topic.FullName;
         }
     }
 
