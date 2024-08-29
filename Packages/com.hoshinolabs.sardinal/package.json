@@ -4,6 +4,7 @@
   "version": "0.6.1",
   "unity": "2022.3",
   "description": "Sardinal is a messaging system for VRChat Udon#. It supports Pub/Sub with parameters.",
+  "documentationUrl": "https://github.com/hoshinolabs/Sardinal",
   "vrchatVersion": "2022.1.1",
   "author": {
     "name": "ikuko",
