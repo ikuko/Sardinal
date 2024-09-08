@@ -3,9 +3,9 @@
 ![](https://img.shields.io/badge/unity-2022.3+-000.svg)
 [![Releases](https://img.shields.io/github/release/hoshinolabs/Sardinal.svg)](https://github.com/hoshinolabs/Sardinal/releases)
 
-Sardinal is a messaging system for VRChat Udon#. It supports Pub/Sub with parameters.  
+Sardinal is a messaging system for <a href="https://udonsharp.docs.vrchat.com/">VRChat Udon#</a>. It supports Pub/Sub with parameters.  
   
-Sardinal は VRChat Udon# 用のメッセージングシステムです。  
+Sardinal は <a href="https://udonsharp.docs.vrchat.com/">VRChat Udon#</a> 用のメッセージングシステムです。  
 パラメータ付きの Pub/Sub をサポートしています。
 
 ## Features
