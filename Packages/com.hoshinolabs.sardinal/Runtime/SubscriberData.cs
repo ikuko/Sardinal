@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using VRC.Udon.Common.Interfaces;
 
 namespace HoshinoLabs.Sardinal {

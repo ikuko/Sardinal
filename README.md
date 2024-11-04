@@ -3,9 +3,9 @@
 ![](https://img.shields.io/badge/unity-2022.3+-000.svg)
 [![Releases](https://img.shields.io/github/release/hoshinolabs/Sardinal.svg)](https://github.com/hoshinolabs/Sardinal/releases)
 
-Sardinal is a messaging system for <a href="https://udonsharp.docs.vrchat.com/">VRChat Udon#</a>. It supports Pub/Sub with parameters.  
+Sardinal is a messaging system for <a href="https://udonsharp.docs.vrchat.com/">VRChat Udon(U#)</a>. It supports Pub/Sub with parameters.  
   
-Sardinal は <a href="https://udonsharp.docs.vrchat.com/">VRChat Udon#</a> 用のメッセージングシステムです。  
+Sardinal は <a href="https://udonsharp.docs.vrchat.com/">VRChat Udon(U#)</a> 用のメッセージングシステムです。  
 パラメータ付きの Pub/Sub をサポートしています。
 
 ## Features
@@ -43,12 +43,12 @@ vpm add com.hoshinolabs.sardinal
 次のような Udon があるとする。
 
 ```csharp
-public abstract class SardineSignal { }
+public interface MySignal { }
 ```
 
 ```csharp
 public class HelloSardine : UdonSharpBehaviour {
-  [Subscriber(typeof(SardineSignal))]
+  [Subscriber(typeof(MySignal))]
   public void Hello(string arg) {
     Debug.Log($"Hello {arg}.");
   }
@@ -60,32 +60,39 @@ public class SardinalDemo : UdonSharpBehaviour {
   [Inject, SerializeField, HideInInspector]
   ISardinal sardinal;
   [SerializeField]
-  SignalId signalId = new SignalId<SardineSignal>();
+  SignalId signalId = new SignalId<MySignal>();
 
   private void Start() {
-    sardinal.Publish(signalId, null, $"Sardinal");
+    sardinal.Publish(signalId, $"Sardinal");
   }
+}
+```
 
-#if UNITY_EDITOR
-  public class Builder : IProcessSceneWithReport {
-    public int callbackOrder => 0;
+Sardinal は DI が前提のシステムとなっています。  
+依存関係を記述したスクリプトを作成します。  
+シーン上にオブジェクトを作成し `SardinalDemo` コンポーネントを追加します。  
+あわせて `SceneScope` コンポーネントと作成したスクリプトを追加します。
 
-    public void OnProcessScene(Scene scene, BuildReport report) {
-      var context = ProjectContext.New();
-      context.Enqueue(builder => {
-        builder.AddInHierarchy<SardinalDemo>();
-      });
-      context.Build();
-    }
+```csharp
+public class CustomInstaller : MonoBehaviour, IInstaller {
+  public void Install(ContainerBuilder containerBuilder) {
+    containerBuilder.UseComponents(transform, builder => {
+      builder.RegisterOnNewGameObject<HelloSardine>(Lifetime.Cached);
+      builder.RegisterInHierarchy<SardinalDemo>(Lifetime.Cached);
+    });
   }
-#endif
 }
 ```
 
 実行するとコンソールに以下のように表示されます。
+
 ```bash
 Hello Sardinal.
 ```
+
+例ではメッセージの受信先の存在を知らなくても送信することができています。  
+相手は複数いても ID が同じ受信先にメッセージが送信されます。  
+オプションで channel を利用することで受信先の範囲を指定したり動的に Subscribe することもできます。
 
 ## Author
 

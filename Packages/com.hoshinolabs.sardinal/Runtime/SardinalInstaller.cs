@@ -1,42 +1,39 @@
 using HoshinoLabs.Sardinal.Udon;
 using HoshinoLabs.Sardinject;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using UdonSharp;
 using UdonSharp.Internal;
-using UdonSharpEditor;
 using UnityEngine;
 using VRC.Udon.Common.Interfaces;
 
 namespace HoshinoLabs.Sardinal {
-    internal static class SardinalBuilder {
-        public static void Build() {
-            var context = new Context();
-            context.Enqueue(builder => {
-                var subscriberSchema = BuildSubscriberSchema();
-                var subscriberData = BuildSubscriberData(subscriberSchema);
-                var schemaData = BuildSchemaData(subscriberSchema);
-
-                builder.AddInHierarchy(ISardinal.ImplementationType)
-                    .As<ISardinal>()
-                    .WithParameter("_0_0", subscriberData._0)
-                    .WithParameter("_0_1", subscriberData._1)
-                    .WithParameter("_0_2", subscriberData._2)
-                    .WithParameter("_0_3", subscriberData._3)
-                    .WithParameter("_0_4", subscriberData._4)
-                    .WithParameter("_0_5", subscriberData._5)
-                    .WithParameter("_1_0", schemaData._0)
-                    .WithParameter("_1_1", schemaData._1)
-                    .WithParameter("_1_2", schemaData._2)
-                    .WithParameter("_1_3", schemaData._3)
-                    .WithParameter("_1_4", schemaData._4);
-            });
-            context.Build();
+    public class SardinalInstaller : MonoBehaviour, IInstaller {
+        public void Install(ContainerBuilder builder) {
+            var subscriberSchema = BuildSubscriberSchema();
+            var subscriberData = BuildSubscriberData(subscriberSchema);
+            var schemaData = BuildSchemaData(subscriberSchema);
+            builder.RegisterComponentOnNewGameObject(
+                ISardinal.ImplementationType,
+                Lifetime.Cached,
+                $"__{GetType().Namespace.Replace('.', '_')}__"
+            )
+            .As<ISardinal>()
+            .WithParameter("_0_0", subscriberData._0)
+            .WithParameter("_0_1", subscriberData._1)
+            .WithParameter("_0_2", subscriberData._2)
+            .WithParameter("_0_3", subscriberData._3)
+            .WithParameter("_0_4", subscriberData._4)
+            .WithParameter("_0_5", subscriberData._5)
+            .WithParameter("_1_0", schemaData._0)
+            .WithParameter("_1_1", schemaData._1)
+            .WithParameter("_1_2", schemaData._2)
+            .WithParameter("_1_3", schemaData._3)
+            .WithParameter("_1_4", schemaData._4);
         }
 
-        static SubscriberSchema[] BuildSubscriberSchema() {
+        SubscriberSchema[] BuildSubscriberSchema() {
             return AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(x => x.GetTypes())
                 .Where(x => typeof(UdonSharpBehaviour).IsAssignableFrom(x))
@@ -69,19 +66,20 @@ namespace HoshinoLabs.Sardinal {
                                 })
                                 .ToArray();
                             return new SubscriberSchema(signature, channel, type, methodSymbol, parameterSymbols);
-                        });
+                        })
+                        .ToArray();
                 })
                 .ToArray();
         }
 
-        static (int _0, string[] _1, int[] _2, object[][] _3, IUdonEventReceiver[][] _4, int[][] _5) BuildSubscriberData(SubscriberSchema[] subscriberSchema) {
+        (int _0, string[] _1, int[] _2, object[][] _3, IUdonEventReceiver[][] _4, int[][] _5) BuildSubscriberData(SubscriberSchema[] subscriberSchema) {
             var subscriberData = subscriberSchema
                 .Select((schema, idx) => (schema, idx))
                 .GroupBy(x => x.schema.Type)
                 .SelectMany(schemas => {
                     return GameObject.FindObjectsOfType(schemas.Key, true)
                         .OfType<UdonSharpBehaviour>()
-                        .Select(x => UdonSharpEditorUtility.GetBackingUdonBehaviour(x))
+                        .Select(x => x.GetBackingUdonBehaviour())
                         .SelectMany(receiver => {
                             return schemas
                                 .Select(x => new SubscriberData(x.schema.Signature, receiver, x.schema.Channel, x.idx));
@@ -98,11 +96,11 @@ namespace HoshinoLabs.Sardinal {
                 );
         }
 
-        static (int _0, string[] _1, long[] _2, string[] _3, string[][] _4) BuildSchemaData(SubscriberSchema[] subscriberSchema) {
+        (int _0, string[] _1, long[] _2, string[] _3, string[][] _4) BuildSchemaData(SubscriberSchema[] subscriberSchema) {
             return (
                 _0: subscriberSchema.Length,
                 _1: subscriberSchema.Select(x => x.Signature).ToArray(),
-                _2: subscriberSchema.Select(x => UdonSharpInternalUtility.GetTypeID(x.Type)).ToArray(), 
+                _2: subscriberSchema.Select(x => UdonSharpInternalUtility.GetTypeID(x.Type)).ToArray(),
                 _3: subscriberSchema.Select(x => x.MethodSymbol).ToArray(),
                 _4: subscriberSchema.Select(x => x.ParameterSymbols).ToArray()
             );

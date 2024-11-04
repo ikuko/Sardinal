@@ -1,8 +1,5 @@
 using HoshinoLabs.Sardinal.Udon;
-using System.Collections;
-using System.Collections.Generic;
 using UdonSharp.Serialization;
-using UnityEngine;
 
 namespace HoshinoLabs.Sardinal {
     internal sealed class SignalIdSerializer : Serializer<SignalId> {

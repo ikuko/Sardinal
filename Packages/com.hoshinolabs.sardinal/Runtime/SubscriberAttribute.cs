@@ -1,7 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
 namespace HoshinoLabs.Sardinal {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]

@@ -1,7 +1,4 @@
 using HoshinoLabs.Sardinal.Udon;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
 namespace HoshinoLabs.Sardinal {
     internal static class SignalIdExtensions {
