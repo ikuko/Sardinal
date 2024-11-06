@@ -9,21 +9,31 @@ namespace HoshinoLabs.Sardinal.Udon {
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
     internal sealed class Sardinal : ISardinal {
         [Inject, SerializeField, HideInInspector]
-        int _0_0;
+        int _0;
         [Inject, SerializeField, HideInInspector]
-        string[] _0_1;
+        string[] _1;
         [Inject, SerializeField, HideInInspector]
-        int[] _0_2;
+        int[] _2;
         [Inject, SerializeField, HideInInspector]
-        object[][] _0_3;
+        object[][] _3;
         [Inject, SerializeField, HideInInspector]
-        IUdonEventReceiver[][] _0_4;
+        IUdonEventReceiver[][] _4;
         [Inject, SerializeField, HideInInspector]
-        int[][] _0_5;
+        int[][] _5;
+        [Inject, SerializeField, HideInInspector]
+        int _6;
+        [Inject, SerializeField, HideInInspector]
+        string[] _7;
+        [Inject, SerializeField, HideInInspector]
+        long[] _8;
+        [Inject, SerializeField, HideInInspector]
+        string[] _9;
+        [Inject, SerializeField, HideInInspector]
+        string[][] _10;
 
         public override void Publish(SignalId id, params object[] args) {
             if (id == null) {
-                Debug.LogError("[<color=#47F1FF>Sardinal</color>] Attempting to use an invalid signal id");
+                Logger.LogError("Attempting to use an invalid signal id");
                 return;
             }
             var _id = $"{((object[])(object)id)[0]}.";
@@ -33,28 +43,28 @@ namespace HoshinoLabs.Sardinal.Udon {
                 _id += $"__{args[i].GetType().FullName.Replace(".", "")}";
             }
 
-            var idx = Array.IndexOf(_0_1, _id);
+            var idx = Array.IndexOf(_1, _id);
             if (idx < 0) {
                 return;
             }
-            var __2 = _0_2[idx];
-            var __3 = _0_3[idx];
-            var __4 = _0_4[idx];
-            var __5 = _0_5[idx];
+            var __2 = _2[idx];
+            var __3 = _3[idx];
+            var __4 = _4[idx];
+            var __5 = _5[idx];
             for (var i = 0; i < __2; i++) {
                 var ___4 = __4[i];
                 var ___5 = __5[i];
-                var __1_4 = _1_4[___5];
+                var __10 = _10[___5];
                 for (var j = 0; j < argsLength; j++) {
-                    ___4.SetProgramVariable(__1_4[j], args[j]);
+                    ___4.SetProgramVariable(__10[j], args[j]);
                 }
-                ___4.SendCustomEvent(_1_3[___5]);
+                ___4.SendCustomEvent(_9[___5]);
             }
         }
 
         public override void PublishWithChannel(SignalId id, object channel, params object[] args) {
             if (id == null) {
-                Debug.LogError("[<color=#47F1FF>Sardinal</color>] Attempting to use an invalid signal id");
+                Logger.LogError("Attempting to use an invalid signal id");
                 return;
             }
             var _id = $"{((object[])(object)id)[0]}.";
@@ -64,205 +74,194 @@ namespace HoshinoLabs.Sardinal.Udon {
                 _id += $"__{args[i].GetType().FullName.Replace(".", "")}";
             }
 
-            var idx = Array.IndexOf(_0_1, _id);
+            var idx = Array.IndexOf(_1, _id);
             if (idx < 0) {
                 return;
             }
-            var __2 = _0_2[idx];
-            var __3 = _0_3[idx];
-            var __4 = _0_4[idx];
-            var __5 = _0_5[idx];
+            var __2 = _2[idx];
+            var __3 = _3[idx];
+            var __4 = _4[idx];
+            var __5 = _5[idx];
             for (var i = 0; i < __2; i++) {
                 if (__3[i] != null && !__3[i].Equals(channel)) {
                     continue;
                 }
                 var ___4 = __4[i];
                 var ___5 = __5[i];
-                var __1_4 = _1_4[___5];
+                var __10 = _10[___5];
                 for (var j = 0; j < argsLength; j++) {
-                    ___4.SetProgramVariable(__1_4[j], args[j]);
+                    ___4.SetProgramVariable(__10[j], args[j]);
                 }
-                ___4.SendCustomEvent(_1_3[___5]);
+                ___4.SendCustomEvent(_9[___5]);
             }
         }
 
-        [Inject, SerializeField, HideInInspector]
-        int _1_0;
-        [Inject, SerializeField, HideInInspector]
-        string[] _1_1;
-        [Inject, SerializeField, HideInInspector]
-        long[] _1_2;
-        [Inject, SerializeField, HideInInspector]
-        string[] _1_3;
-        [Inject, SerializeField, HideInInspector]
-        string[][] _1_4;
-
         public override void Subscribe(SignalId id, UdonSharpBehaviour subscriber) {
             if (id == null) {
-                Debug.LogError("[<color=#47F1FF>Sardinal</color>] Attempting to use an invalid signal id");
+                Logger.LogError("Attempting to use an invalid signal id");
                 return;
             }
             var _id = $"{((object[])(object)id)[0]}.";
 
             var udonId = subscriber.GetUdonTypeID();
             var receiver = (IUdonEventReceiver)(object)subscriber;
-            for (var i = 0; i < _1_0; i++) {
-                var __1 = _1_1[i];
-                if (!__1.StartsWith(_id) || _1_2[i] != udonId) {
+            for (var i = 0; i < _6; i++) {
+                var __7 = _7[i];
+                if (!__7.StartsWith(_id) || _8[i] != udonId) {
                     continue;
                 }
-                var idx = Array.IndexOf(_0_1, __1);
+                var idx = Array.IndexOf(_1, __7);
                 if (idx < 0) {
-                    var _0_0a = _0_0;
-                    _0_0 = _0_0a + 1;
-                    var _0_1a = new string[_0_0];
-                    Array.Copy(_0_1, _0_1a, _0_0a);
-                    _0_1a[_0_0a] = __1;
-                    _0_1 = _0_1a;
-                    var _0_2a = new int[_0_0];
-                    Array.Copy(_0_2, _0_2a, _0_0a);
-                    _0_2a[_0_0a] = 1;
-                    _0_2 = _0_2a;
-                    var _0_3a = new object[_0_0][];
-                    Array.Copy(_0_3, _0_3a, _0_0a);
-                    _0_3a[_0_0a] = new[] { (object)null };
-                    _0_3 = _0_3a;
-                    var _0_4a = new IUdonEventReceiver[_0_0][];
-                    Array.Copy(_0_4, _0_4a, _0_0a);
-                    _0_4a[_0_0a] = new[] { receiver };
-                    _0_4 = _0_4a;
-                    var _0_5a = new int[_0_0][];
-                    Array.Copy(_0_5, _0_5a, _0_0a);
-                    _0_5a[_0_0a] = new[] { i };
-                    _0_5 = _0_5a;
+                    var __0a = _0;
+                    _0 = __0a + 1;
+                    var __1a = new string[_0];
+                    Array.Copy(_1, __1a, __0a);
+                    __1a[__0a] = __7;
+                    _1 = __1a;
+                    var __2a = new int[_0];
+                    Array.Copy(_2, __2a, __0a);
+                    __2a[__0a] = 1;
+                    _2 = __2a;
+                    var __3a = new object[_0][];
+                    Array.Copy(_3, __3a, __0a);
+                    __3a[__0a] = new[] { (object)null };
+                    _3 = __3a;
+                    var __4a = new IUdonEventReceiver[_0][];
+                    Array.Copy(_4, __4a, __0a);
+                    __4a[__0a] = new[] { receiver };
+                    _4 = __4a;
+                    var __5a = new int[_0][];
+                    Array.Copy(_5, __5a, __0a);
+                    __5a[__0a] = new[] { i };
+                    _5 = __5a;
                 }
                 else {
-                    if (0 <= Array.IndexOf(_0_4[idx], receiver)) {
+                    if (0 <= Array.IndexOf(_4[idx], receiver)) {
                         continue;
                     }
-                    var _0_2a = _0_2[idx];
-                    var _0_2b = _0_2a + 1;
-                    _0_2[idx] = _0_2b;
-                    var _0_3a = new object[_0_2b];
-                    Array.Copy(_0_3[idx], _0_3a, _0_2a);
-                    _0_3a[_0_2a] = null;
-                    _0_3[idx] = _0_3a;
-                    var _0_4a = new IUdonEventReceiver[_0_2b];
-                    Array.Copy(_0_4[idx], _0_4a, _0_2a);
-                    _0_4a[_0_2a] = receiver;
-                    _0_4[idx] = _0_4a;
-                    var _0_5a = new int[_0_2b];
-                    Array.Copy(_0_5[idx], _0_5a, _0_2a);
-                    _0_5a[_0_2a] = i;
-                    _0_5[idx] = _0_5a;
+                    var __2a = _2[idx];
+                    var __2b = __2a + 1;
+                    _2[idx] = __2b;
+                    var __3a = new object[__2b];
+                    Array.Copy(_3[idx], __3a, __2a);
+                    __3a[__2a] = null;
+                    _3[idx] = __3a;
+                    var __4a = new IUdonEventReceiver[__2b];
+                    Array.Copy(_4[idx], __4a, __2a);
+                    __4a[__2a] = receiver;
+                    _4[idx] = __4a;
+                    var __5a = new int[__2b];
+                    Array.Copy(_5[idx], __5a, __2a);
+                    __5a[__2a] = i;
+                    _5[idx] = __5a;
                 }
             }
         }
 
         public override void SubscribeWithChannel(SignalId id, object channel, UdonSharpBehaviour subscriber) {
             if (id == null) {
-                Debug.LogError("[<color=#47F1FF>Sardinal</color>] Attempting to use an invalid signal id");
+                Logger.LogError("Attempting to use an invalid signal id");
                 return;
             }
             var _id = $"{((object[])(object)id)[0]}.";
 
             var udonId = subscriber.GetUdonTypeID();
             var receiver = (IUdonEventReceiver)(object)subscriber;
-            for (var i = 0; i < _1_0; i++) {
-                var __1 = _1_1[i];
-                if (!__1.StartsWith(_id) || _1_2[i] != udonId) {
+            for (var i = 0; i < _6; i++) {
+                var __1 = _7[i];
+                if (!__1.StartsWith(_id) || _8[i] != udonId) {
                     continue;
                 }
-                var idx = Array.IndexOf(_0_1, __1);
+                var idx = Array.IndexOf(_1, __1);
                 if (idx < 0) {
-                    var _0_0a = _0_0;
-                    _0_0 = _0_0a + 1;
-                    var _0_1a = new string[_0_0];
-                    Array.Copy(_0_1, _0_1a, _0_0a);
-                    _0_1a[_0_0a] = __1;
-                    _0_1 = _0_1a;
-                    var _0_2a = new int[_0_0];
-                    Array.Copy(_0_2, _0_2a, _0_0a);
-                    _0_2a[_0_0a] = 1;
-                    _0_2 = _0_2a;
-                    var _0_3a = new object[_0_0][];
-                    Array.Copy(_0_3, _0_3a, _0_0a);
-                    _0_3a[_0_0a] = new[] { channel };
-                    _0_3 = _0_3a;
-                    var _0_4a = new IUdonEventReceiver[_0_0][];
-                    Array.Copy(_0_4, _0_4a, _0_0a);
-                    _0_4a[_0_0a] = new[] { receiver };
-                    _0_4 = _0_4a;
-                    var _0_5a = new int[_0_0][];
-                    Array.Copy(_0_5, _0_5a, _0_0a);
-                    _0_5a[_0_0a] = new[] { i };
-                    _0_5 = _0_5a;
+                    var __0a = _0;
+                    _0 = __0a + 1;
+                    var __1a = new string[_0];
+                    Array.Copy(_1, __1a, __0a);
+                    __1a[__0a] = __1;
+                    _1 = __1a;
+                    var __2a = new int[_0];
+                    Array.Copy(_2, __2a, __0a);
+                    __2a[__0a] = 1;
+                    _2 = __2a;
+                    var __3a = new object[_0][];
+                    Array.Copy(_3, __3a, __0a);
+                    __3a[__0a] = new[] { channel };
+                    _3 = __3a;
+                    var __4a = new IUdonEventReceiver[_0][];
+                    Array.Copy(_4, __4a, __0a);
+                    __4a[__0a] = new[] { receiver };
+                    _4 = __4a;
+                    var __5a = new int[_0][];
+                    Array.Copy(_5, __5a, __0a);
+                    __5a[__0a] = new[] { i };
+                    _5 = __5a;
                 }
                 else {
-                    if (0 <= Array.IndexOf(_0_4[idx], receiver)) {
+                    if (0 <= Array.IndexOf(_4[idx], receiver)) {
                         continue;
                     }
-                    var _0_2a = _0_2[idx];
-                    var _0_2b = _0_2a + 1;
-                    _0_2[idx] = _0_2b;
-                    var _0_3a = new object[_0_2b];
-                    Array.Copy(_0_3[idx], _0_3a, _0_2a);
-                    _0_3a[_0_2a] = channel;
-                    _0_3[idx] = _0_3a;
-                    var _0_4a = new IUdonEventReceiver[_0_2b];
-                    Array.Copy(_0_4[idx], _0_4a, _0_2a);
-                    _0_4a[_0_2a] = receiver;
-                    _0_4[idx] = _0_4a;
-                    var _0_5a = new int[_0_2b];
-                    Array.Copy(_0_5[idx], _0_5a, _0_2a);
-                    _0_5a[_0_2a] = i;
-                    _0_5[idx] = _0_5a;
+                    var __2a = _2[idx];
+                    var __2b = __2a + 1;
+                    _2[idx] = __2b;
+                    var __3a = new object[__2b];
+                    Array.Copy(_3[idx], __3a, __2a);
+                    __3a[__2a] = channel;
+                    _3[idx] = __3a;
+                    var __4a = new IUdonEventReceiver[__2b];
+                    Array.Copy(_4[idx], __4a, __2a);
+                    __4a[__2a] = receiver;
+                    _4[idx] = __4a;
+                    var __5a = new int[__2b];
+                    Array.Copy(_5[idx], __5a, __2a);
+                    __5a[__2a] = i;
+                    _5[idx] = __5a;
                 }
             }
         }
 
         public override void Unsubscribe(SignalId id, UdonSharpBehaviour subscriber) {
             if (id == null) {
-                Debug.LogError("[<color=#47F1FF>Sardinal</color>] Attempting to use an invalid signal id");
+                Logger.LogError("Attempting to use an invalid signal id");
                 return;
             }
             var _id = $"{((object[])(object)id)[0]}.";
 
             var udonId = subscriber.GetUdonTypeID();
             var receiver = (IUdonEventReceiver)(object)subscriber;
-            for (var i = 0; i < _1_0; i++) {
-                var __1 = _1_1[i];
-                if (!__1.StartsWith(_id) || _1_2[i] != udonId) {
+            for (var i = 0; i < _6; i++) {
+                var __1 = _7[i];
+                if (!__1.StartsWith(_id) || _8[i] != udonId) {
                     continue;
                 }
-                var idx = Array.IndexOf(_0_1, __1);
+                var idx = Array.IndexOf(_1, __1);
                 if (idx < 0) {
                     continue;
                 }
-                var _0_4a = _0_4[idx];
-                var dest = Array.IndexOf(_0_4a, receiver);
+                var __4a = _4[idx];
+                var dest = Array.IndexOf(__4a, receiver);
                 if(dest < 0) {
                     continue;
                 }
-                var _0_2a = _0_2[idx];
-                var _0_2b = _0_2a - 1;
-                _0_2[idx] = _0_2b;
+                var __2a = _2[idx];
+                var __2b = __2a - 1;
+                _2[idx] = __2b;
                 var src = dest + 1;
-                var length = _0_2a - src;
-                var _0_3a = _0_3[idx];
-                var _0_3b = new object[_0_2b];
-                Array.Copy(_0_3a, 0, _0_3b, 0, dest);
-                Array.Copy(_0_3a, src, _0_3b, dest, length);
-                _0_3[idx] = _0_3b;
-                var _0_4b = new IUdonEventReceiver[_0_2b];
-                Array.Copy(_0_4a, 0, _0_4b, 0, dest);
-                Array.Copy(_0_4a, src, _0_4b, dest, length);
-                _0_4[idx] = _0_4b;
-                var _0_5a = _0_5[idx];
-                var _0_5b = new int[_0_2b];
-                Array.Copy(_0_5a, 0, _0_5b, 0, dest);
-                Array.Copy(_0_5a, src, _0_5b, dest, length);
-                _0_5[idx] = _0_5b;
+                var length = __2a - src;
+                var __3a = _3[idx];
+                var __3b = new object[__2b];
+                Array.Copy(__3a, 0, __3b, 0, dest);
+                Array.Copy(__3a, src, __3b, dest, length);
+                _3[idx] = __3b;
+                var __4b = new IUdonEventReceiver[__2b];
+                Array.Copy(__4a, 0, __4b, 0, dest);
+                Array.Copy(__4a, src, __4b, dest, length);
+                _4[idx] = __4b;
+                var __5a = _5[idx];
+                var __5b = new int[__2b];
+                Array.Copy(__5a, 0, __5b, 0, dest);
+                Array.Copy(__5a, src, __5b, dest, length);
+                _5[idx] = __5b;
             }
         }
     }

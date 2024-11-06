@@ -10,27 +10,35 @@ using VRC.Udon.Common.Interfaces;
 
 namespace HoshinoLabs.Sardinal {
     public class SardinalInstaller : MonoBehaviour, IInstaller {
+        GameObject rootGo;
+
         public void Install(ContainerBuilder builder) {
             var subscriberSchema = BuildSubscriberSchema();
             var subscriberData = BuildSubscriberData(subscriberSchema);
             var schemaData = BuildSchemaData(subscriberSchema);
             builder.RegisterComponentOnNewGameObject(
                 ISardinal.ImplementationType,
-                Lifetime.Cached,
-                $"__{GetType().Namespace.Replace('.', '_')}__"
+                Lifetime.Cached
             )
-            .As<ISardinal>()
-            .WithParameter("_0_0", subscriberData._0)
-            .WithParameter("_0_1", subscriberData._1)
-            .WithParameter("_0_2", subscriberData._2)
-            .WithParameter("_0_3", subscriberData._3)
-            .WithParameter("_0_4", subscriberData._4)
-            .WithParameter("_0_5", subscriberData._5)
-            .WithParameter("_1_0", schemaData._0)
-            .WithParameter("_1_1", schemaData._1)
-            .WithParameter("_1_2", schemaData._2)
-            .WithParameter("_1_3", schemaData._3)
-            .WithParameter("_1_4", schemaData._4);
+                .UnderTransform(() => {
+                    if (rootGo == null) {
+                        rootGo = new GameObject($"__{typeof(ISardinal).Namespace.Replace('.', '_')}__");
+                        rootGo.hideFlags = HideFlags.HideInHierarchy;
+                    }
+                    return rootGo.transform;
+                })
+                .As<ISardinal>()
+                .WithParameter("_0", subscriberData._0)
+                .WithParameter("_1", subscriberData._1)
+                .WithParameter("_2", subscriberData._2)
+                .WithParameter("_3", subscriberData._3)
+                .WithParameter("_4", subscriberData._4)
+                .WithParameter("_5", subscriberData._5)
+                .WithParameter("_6", schemaData._0)
+                .WithParameter("_7", schemaData._1)
+                .WithParameter("_8", schemaData._2)
+                .WithParameter("_9", schemaData._3)
+                .WithParameter("_10", schemaData._4);
         }
 
         SubscriberSchema[] BuildSubscriberSchema() {
