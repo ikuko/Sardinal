@@ -1,15 +1,12 @@
 using System.Collections.Generic;
 using System.Reflection;
 using UdonSharp.Serialization;
-using UnityEditor.Build;
-using UnityEditor.Build.Reporting;
-using UnityEngine.SceneManagement;
+using UnityEditor;
 
 namespace HoshinoLabs.Sardinal {
-    internal sealed class SignalIdArraySerializerBuilder : IProcessSceneWithReport {
-        public int callbackOrder => -5001;
-
-        public void OnProcessScene(Scene scene, BuildReport report) {
+    internal static class SignalIdArraySerializerBuilder {
+        [InitializeOnLoadMethod]
+        static void OnLoad() {
             var typeCheckSerializersField = typeof(Serializer).GetField("_typeCheckSerializers", BindingFlags.Static | BindingFlags.NonPublic);
             var typeCheckSerializers = (List<Serializer>)typeCheckSerializersField.GetValue(null);
             typeCheckSerializers.RemoveAll(x => x.GetType() == typeof(SignalIdArraySerializer));
