@@ -8,27 +8,27 @@ namespace HoshinoLabs.Sardinal.Udon {
     [AddComponentMenu("")]
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
     internal sealed class Sardinal : ISardinal {
-        [Inject, SerializeField, HideInInspector]
+        [SerializeField, HideInInspector]
         int _0;
-        [Inject, SerializeField, HideInInspector]
+        [SerializeField, HideInInspector]
         string[] _1;
-        [Inject, SerializeField, HideInInspector]
+        [SerializeField, HideInInspector]
         int[] _2;
-        [Inject, SerializeField, HideInInspector]
+        [SerializeField, HideInInspector]
         object[][] _3;
-        [Inject, SerializeField, HideInInspector]
+        [SerializeField, HideInInspector]
         IUdonEventReceiver[][] _4;
-        [Inject, SerializeField, HideInInspector]
+        [SerializeField, HideInInspector]
         int[][] _5;
-        [Inject, SerializeField, HideInInspector]
+        [SerializeField, HideInInspector]
         int _6;
-        [Inject, SerializeField, HideInInspector]
+        [SerializeField, HideInInspector]
         string[] _7;
-        [Inject, SerializeField, HideInInspector]
+        [SerializeField, HideInInspector]
         long[] _8;
-        [Inject, SerializeField, HideInInspector]
+        [SerializeField, HideInInspector]
         string[] _9;
-        [Inject, SerializeField, HideInInspector]
+        [SerializeField, HideInInspector]
         string[][] _10;
 
         public override void Publish(SignalId id, params object[] args) {

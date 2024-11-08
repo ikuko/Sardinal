@@ -1,4 +1,3 @@
-using HoshinoLabs.Sardinal.Udon;
 using UdonSharp.Serialization;
 
 namespace HoshinoLabs.Sardinal {

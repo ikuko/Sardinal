@@ -1,17 +1,13 @@
-using VRC.Udon.Common.Interfaces;
-
 namespace HoshinoLabs.Sardinal {
     internal sealed class SubscriberData {
-        public string Signature { get; }
-        public IUdonEventReceiver Receiver { get; }
-        public object Channel { get; }
-        public int SchemaId { get; }
+        public readonly object Receiver;
+        public readonly object Channel;
+        public readonly SubscriberSchema Schema;
 
-        public SubscriberData(string signature, IUdonEventReceiver receiver, object channel, int schemaId) {
-            Signature = signature;
+        public SubscriberData(object receiver, object channel, SubscriberSchema schema) {
             Receiver = receiver;
             Channel = channel;
-            SchemaId = schemaId;
+            Schema = schema;
         }
     }
 }
