@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using UnityEditor;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace HoshinoLabs.Sardinal {
@@ -16,8 +16,8 @@ namespace HoshinoLabs.Sardinal {
 
         }
 
-        [InitializeOnLoadMethod]
-        static void OnLoad() {
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        static void OnSubsystemRegistration() {
             UnityInjector.OnSceneContainerBuilt -= SceneContainerBuilt;
             UnityInjector.OnSceneContainerBuilt += SceneContainerBuilt;
         }

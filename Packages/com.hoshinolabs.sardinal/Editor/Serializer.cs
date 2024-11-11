@@ -22,7 +22,7 @@ namespace HoshinoLabs.Sardinal {
         public override void Write(IValueStorage targetObject, in T sourceObject) {
             VerifySerializationSanity();
             if (targetObject == null) {
-                Debug.LogError($"[<color=#47F1FF>Sardinal</color>] Field for {typeof(T)} does not exist");
+                Debug.LogError($"[<color=#47F1FF>SardinalShim</color>] Field for {typeof(T)} does not exist");
                 return;
             }
 

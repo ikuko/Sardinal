@@ -1,4 +1,3 @@
-using HoshinoLabs.Sardinal.Udon;
 using HoshinoLabs.Sardinject;
 using System;
 using System.Linq;
@@ -16,7 +15,7 @@ namespace HoshinoLabs.Sardinal {
 
         GameObject rootGo;
 
-        static ISardinal usardinal;
+        static Udon.Sardinal usardinal;
         static SubscriberSchema[] subscriberSchema;
         static SubscriberData[] subscriberData;
 
@@ -51,13 +50,13 @@ namespace HoshinoLabs.Sardinal {
         }
 
         public object Resolve(Container container) {
-            var gameObjectName = ISardinal.ImplementationType.Name;
+            var gameObjectName = Udon.Sardinal.ImplementationType.Name;
             rootGo = new GameObject(gameObjectName);
             var transform = Destination.Transform?.Resolve<Transform>(container);
             if (transform != null) {
                 rootGo.transform.SetParent(transform);
             }
-            usardinal = (ISardinal)rootGo.AddUdonSharpComponentEx(ISardinal.ImplementationType, false);
+            usardinal = (Udon.Sardinal)rootGo.AddUdonSharpComponentEx(Udon.Sardinal.ImplementationType, false);
             subscriberSchema = BuildSubscriberSchema();
             subscriberData = Array.Empty<SubscriberData>();
             var _subscriberData = BuildSubscriberData();
@@ -84,9 +83,9 @@ namespace HoshinoLabs.Sardinal {
                 .SelectMany(type => {
                     var methods = type.GetMethods(BindingFlags.Instance | BindingFlags.Public);
                     return methods
-                        .Where(x => x.IsDefined(typeof(SubscriberAttribute)))
+                        .Where(x => x.IsDefined(typeof(Udon.SubscriberAttribute)))
                         .Select(method => {
-                            var attribute = method.GetCustomAttribute<SubscriberAttribute>();
+                            var attribute = method.GetCustomAttribute<Udon.SubscriberAttribute>();
                             var signature = $"{attribute.Topic.FullName.ComputeHashMD5()}.";
                             foreach (var parameter in method.GetParameters()) {
                                 signature += $"__{parameter.ParameterType.FullName.Replace(".", "")}";

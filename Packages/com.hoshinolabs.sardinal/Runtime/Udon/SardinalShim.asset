@@ -10,18 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c333ccfdd0cbdbc4ca30cef2dd6e6b9b, type: 3}
-  m_Name: Sardinal
+  m_Name: SardinalShim
   m_EditorClassIdentifier: 
   serializedUdonProgramAsset: {fileID: 11400000, guid: 224d1bba83172d84abd5aa37b8d1b4e2,
     type: 2}
   udonAssembly: 
   assemblyError: 
-  sourceCsScript: {fileID: 11500000, guid: 8901165b440f77a49a7026e240a9d425, type: 3}
+  sourceCsScript: {fileID: 11500000, guid: d23278b77c6e0a04f9aeafd0389b55d8, type: 3}
   scriptVersion: 2
   compiledVersion: 2
   behaviourSyncMode: 1
   hasInteractEvent: 0
-  scriptID: -2135239751528485469
+  scriptID: -8656475923161256148
   serializationData:
     SerializedFormat: 2
     SerializedBytes: 

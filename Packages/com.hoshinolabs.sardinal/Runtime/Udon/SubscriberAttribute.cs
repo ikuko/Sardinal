@@ -1,6 +1,6 @@
 using System;
 
-namespace HoshinoLabs.Sardinal {
+namespace HoshinoLabs.Sardinal.Udon {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
     public sealed class SubscriberAttribute : Attribute {
         public readonly Type Topic;

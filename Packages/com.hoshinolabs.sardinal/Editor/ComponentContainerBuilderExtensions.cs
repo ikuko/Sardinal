@@ -7,7 +7,7 @@ namespace HoshinoLabs.Sardinal {
         public static ComponentBindingBuilder OverrideUdonSardinalInjection(this ContainerBuilder self) {
             var destination = new ComponentDestination();
             var resolverBuilder = new UdonSardinalResolverBuilder(destination).OverrideScopeIfNeeded(self, Lifetime.Cached);
-            var builder = new ComponentBindingBuilder(typeof(ISardinal), resolverBuilder, destination);
+            var builder = new ComponentBindingBuilder(typeof(Udon.Sardinal), resolverBuilder, destination);
             self.Register(builder);
             return builder;
         }
