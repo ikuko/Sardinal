@@ -1,7 +1,18 @@
+using System.Collections.Generic;
+using System.Reflection;
 using UdonSharp.Serialization;
+using UnityEditor;
 
-namespace HoshinoLabs.Sardinal {
+namespace HoshinoLabs.Sardinal.Udon {
     internal sealed class SignalIdSerializer : Serializer<SignalId> {
+        [InitializeOnLoadMethod]
+        static void OnLoad() {
+            var typeCheckSerializersField = typeof(Serializer).GetField("_typeCheckSerializers", BindingFlags.Static | BindingFlags.NonPublic);
+            var typeCheckSerializers = (List<Serializer>)typeCheckSerializersField.GetValue(null);
+            typeCheckSerializers.RemoveAll(x => x.GetType() == typeof(SignalIdSerializer));
+            typeCheckSerializers.Insert(0, new SignalIdSerializer(null));
+        }
+
         public SignalIdSerializer(TypeSerializationMetadata typeMetadata)
             : base(typeMetadata) {
 

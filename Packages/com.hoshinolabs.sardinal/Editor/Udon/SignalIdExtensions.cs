@@ -1,6 +1,6 @@
-namespace HoshinoLabs.Sardinal {
-    internal static class UdonSignalIdExtensions {
-        public static object Pack(this Udon.SignalId self) {
+namespace HoshinoLabs.Sardinal.Udon {
+    internal static class SignalIdExtensions {
+        public static object Pack(this SignalId self) {
             if (self.GetTopic() == null) {
                 return null;
             }
@@ -9,7 +9,7 @@ namespace HoshinoLabs.Sardinal {
             };
         }
 
-        public static Udon.SignalId UnPack(object obj) {
+        public static SignalId UnPack(object obj) {
             return null;
         }
     }

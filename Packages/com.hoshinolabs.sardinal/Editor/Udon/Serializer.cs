@@ -2,7 +2,7 @@ using System;
 using UdonSharp.Serialization;
 using UnityEngine;
 
-namespace HoshinoLabs.Sardinal {
+namespace HoshinoLabs.Sardinal.Udon {
     internal class Serializer<T> : UdonSharp.Serialization.Serializer<T> {
         public Serializer(TypeSerializationMetadata typeMetadata)
             : base(typeMetadata) {

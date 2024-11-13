@@ -2,7 +2,7 @@ using System;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace HoshinoLabs.Sardinal {
+namespace HoshinoLabs.Sardinal.Udon {
     internal static class StringExtensions {
         static MD5CryptoServiceProvider md5;
         static MD5CryptoServiceProvider Md5 => md5 ?? (md5 = new MD5CryptoServiceProvider());

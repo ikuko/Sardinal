@@ -1,18 +1,18 @@
 using HoshinoLabs.Sardinject;
 using System.Collections.Generic;
 
-namespace HoshinoLabs.Sardinal {
-    internal sealed class UdonSardinalResolverBuilder : IResolverBuilder {
+namespace HoshinoLabs.Sardinal.Udon {
+    internal sealed class SardinalResolverBuilder : IResolverBuilder {
         public Dictionary<object, IResolver> Parameters { get; } = null;
 
         readonly ComponentDestination destination;
 
-        public UdonSardinalResolverBuilder(ComponentDestination destination) {
+        public SardinalResolverBuilder(ComponentDestination destination) {
             this.destination = destination;
         }
 
         public IResolver Build() {
-            return new UdonSardinalResolver(destination);
+            return new SardinalResolver(destination);
         }
     }
 }

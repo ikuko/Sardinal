@@ -9,17 +9,15 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using VRC.Udon.Common.Interfaces;
 
-namespace HoshinoLabs.Sardinal {
-    internal sealed class UdonSardinalResolver : IResolver {
+namespace HoshinoLabs.Sardinal.Udon {
+    internal sealed class SardinalResolver : IResolver {
         public readonly ComponentDestination Destination;
 
-        GameObject rootGo;
-
-        static Udon.Sardinal usardinal;
+        static object instance;
         static SubscriberSchema[] subscriberSchema;
         static SubscriberData[] subscriberData;
 
-        public UdonSardinalResolver(ComponentDestination destination) {
+        public SardinalResolver(ComponentDestination destination) {
             Destination = destination;
         }
 
@@ -29,51 +27,62 @@ namespace HoshinoLabs.Sardinal {
             UnityInjector.OnSceneContainerBuilt += SceneContainerBuilt;
         }
 
-        static void SceneContainerBuilt(Scene scene, Container _) {
-            SceneContainerBuilt(scene);
-        }
-
-        static void SceneContainerBuilt(Scene scene) {
-            if (usardinal == null) {
+        static void SceneContainerBuilt(Scene scene, Container container) {
+            if (instance == null) {
                 return;
             }
+
             subscriberData = subscriberData.Concat(BuildSubscriberData(scene))
                 .ToArray();
             var _subscriberData = BuildSubscriberData();
-            usardinal.SetPublicVariable("_0", _subscriberData._0);
-            usardinal.SetPublicVariable("_1", _subscriberData._1);
-            usardinal.SetPublicVariable("_2", _subscriberData._2);
-            usardinal.SetPublicVariable("_3", _subscriberData._3);
-            usardinal.SetPublicVariable("_4", _subscriberData._4);
-            usardinal.SetPublicVariable("_5", _subscriberData._5);
-            usardinal.ApplyProxyModifications();
+            var schemaData = BuildSchemaData(subscriberSchema);
+
+            container.Scope(builder => {
+                builder.RegisterComponentInstance(instance)
+                    .WithParameter("_0", _subscriberData._0)
+                    .WithParameter("_1", _subscriberData._1)
+                    .WithParameter("_2", _subscriberData._2)
+                    .WithParameter("_3", _subscriberData._3)
+                    .WithParameter("_4", _subscriberData._4)
+                    .WithParameter("_5", _subscriberData._5)
+                    .WithParameter("_6", schemaData._0)
+                    .WithParameter("_7", schemaData._1)
+                    .WithParameter("_8", schemaData._2)
+                    .WithParameter("_9", schemaData._3)
+                    .WithParameter("_10", schemaData._4);
+            });
         }
 
         public object Resolve(Container container) {
-            var gameObjectName = Udon.Sardinal.ImplementationType.Name;
-            rootGo = new GameObject(gameObjectName);
-            var transform = Destination.Transform?.Resolve<Transform>(container);
-            if (transform != null) {
-                rootGo.transform.SetParent(transform);
-            }
-            usardinal = (Udon.Sardinal)rootGo.AddUdonSharpComponentEx(Udon.Sardinal.ImplementationType, false);
+            var transform = Destination.Transform.Resolve<Transform>(container);
+
             subscriberSchema = BuildSubscriberSchema();
             subscriberData = Array.Empty<SubscriberData>();
             var _subscriberData = BuildSubscriberData();
             var schemaData = BuildSchemaData(subscriberSchema);
-            usardinal.SetPublicVariable("_0", _subscriberData._0);
-            usardinal.SetPublicVariable("_1", _subscriberData._1);
-            usardinal.SetPublicVariable("_2", _subscriberData._2);
-            usardinal.SetPublicVariable("_3", _subscriberData._3);
-            usardinal.SetPublicVariable("_4", _subscriberData._4);
-            usardinal.SetPublicVariable("_5", _subscriberData._5);
-            usardinal.SetPublicVariable("_6", schemaData._0);
-            usardinal.SetPublicVariable("_7", schemaData._1);
-            usardinal.SetPublicVariable("_8", schemaData._2);
-            usardinal.SetPublicVariable("_9", schemaData._3);
-            usardinal.SetPublicVariable("_10", schemaData._4);
-            usardinal.ApplyProxyModifications();
-            return usardinal;
+
+            instance = container.Scope(builder => {
+                builder.RegisterComponentOnNewGameObject(
+                    Sardinal.ImplementationType,
+                    Lifetime.Transient,
+                    $"{typeof(Sardinal).Name}"
+                )
+                    .As<Sardinal>()
+                    .UnderTransform(transform)
+                    .WithParameter("_0", _subscriberData._0)
+                    .WithParameter("_1", _subscriberData._1)
+                    .WithParameter("_2", _subscriberData._2)
+                    .WithParameter("_3", _subscriberData._3)
+                    .WithParameter("_4", _subscriberData._4)
+                    .WithParameter("_5", _subscriberData._5)
+                    .WithParameter("_6", schemaData._0)
+                    .WithParameter("_7", schemaData._1)
+                    .WithParameter("_8", schemaData._2)
+                    .WithParameter("_9", schemaData._3)
+                    .WithParameter("_10", schemaData._4);
+            })
+                .Resolve<Sardinal>();
+            return instance;
         }
 
         SubscriberSchema[] BuildSubscriberSchema() {
@@ -83,9 +92,9 @@ namespace HoshinoLabs.Sardinal {
                 .SelectMany(type => {
                     var methods = type.GetMethods(BindingFlags.Instance | BindingFlags.Public);
                     return methods
-                        .Where(x => x.IsDefined(typeof(Udon.SubscriberAttribute)))
+                        .Where(x => x.IsDefined(typeof(SubscriberAttribute)))
                         .Select(method => {
-                            var attribute = method.GetCustomAttribute<Udon.SubscriberAttribute>();
+                            var attribute = method.GetCustomAttribute<SubscriberAttribute>();
                             var signature = $"{attribute.Topic.FullName.ComputeHashMD5()}.";
                             foreach (var parameter in method.GetParameters()) {
                                 signature += $"__{parameter.ParameterType.FullName.Replace(".", "")}";
@@ -145,7 +154,7 @@ namespace HoshinoLabs.Sardinal {
                 );
         }
 
-        (int _0, string[] _1, long[] _2, string[] _3, string[][] _4) BuildSchemaData(SubscriberSchema[] subscriberSchema) {
+        static (int _0, string[] _1, long[] _2, string[] _3, string[][] _4) BuildSchemaData(SubscriberSchema[] subscriberSchema) {
             return (
                 _0: subscriberSchema.Length,
                 _1: subscriberSchema.Select(x => x.Signature).ToArray(),

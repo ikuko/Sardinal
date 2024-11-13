@@ -1,7 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace HoshinoLabs.Sardinal {
+namespace HoshinoLabs.Sardinal.Udon {
     [CustomPropertyDrawer(typeof(SignalId))]
     internal sealed class SignalIdDrawer : PropertyDrawer {
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HoshinoLabs.Sardinject.Udon;
+using System;
 using UdonSharp;
 using UnityEngine;
 using VRC.Udon.Common.Interfaces;
@@ -7,27 +8,27 @@ namespace HoshinoLabs.Sardinal.Udon {
     [AddComponentMenu("")]
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
     internal sealed class SardinalShim : Sardinal {
-        [SerializeField, HideInInspector]
+        [Inject, SerializeField, HideInInspector]
         int _0;
-        [SerializeField, HideInInspector]
+        [Inject, SerializeField, HideInInspector]
         string[] _1;
-        [SerializeField, HideInInspector]
+        [Inject, SerializeField, HideInInspector]
         int[] _2;
-        [SerializeField, HideInInspector]
+        [Inject, SerializeField, HideInInspector]
         object[][] _3;
-        [SerializeField, HideInInspector]
+        [Inject, SerializeField, HideInInspector]
         IUdonEventReceiver[][] _4;
-        [SerializeField, HideInInspector]
+        [Inject, SerializeField, HideInInspector]
         int[][] _5;
-        [SerializeField, HideInInspector]
+        [Inject, SerializeField, HideInInspector]
         int _6;
-        [SerializeField, HideInInspector]
+        [Inject, SerializeField, HideInInspector]
         string[] _7;
-        [SerializeField, HideInInspector]
+        [Inject, SerializeField, HideInInspector]
         long[] _8;
-        [SerializeField, HideInInspector]
+        [Inject, SerializeField, HideInInspector]
         string[] _9;
-        [SerializeField, HideInInspector]
+        [Inject, SerializeField, HideInInspector]
         string[][] _10;
 
         public override void Publish(SignalId id, params object[] args) {

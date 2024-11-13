@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace HoshinoLabs.Sardinal {
     public class SardinalInstaller : MonoBehaviour, IInstaller {
-        public static event Action<ContainerBuilder> Installers;
+        internal static event Action<ContainerBuilder> Installers;
 
         public void Install(ContainerBuilder builder) {
             builder.OverrideSardinalInjection();

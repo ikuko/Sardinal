@@ -1,6 +1,6 @@
 using System;
 
-namespace HoshinoLabs.Sardinal {
+namespace HoshinoLabs.Sardinal.Udon {
     internal sealed class SubscriberSchema {
         public readonly string Signature;
         public readonly object Channel;

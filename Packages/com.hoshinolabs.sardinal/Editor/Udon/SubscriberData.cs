@@ -1,6 +1,6 @@
 using VRC.Udon.Common.Interfaces;
 
-namespace HoshinoLabs.Sardinal {
+namespace HoshinoLabs.Sardinal.Udon {
     internal sealed class SubscriberData {
         public readonly string Signature;
         public readonly IUdonEventReceiver Receiver;

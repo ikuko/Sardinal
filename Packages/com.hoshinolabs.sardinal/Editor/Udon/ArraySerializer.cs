@@ -3,7 +3,7 @@ using System.Linq;
 using UdonSharp.Serialization;
 using UnityEngine;
 
-namespace HoshinoLabs.Sardinal {
+namespace HoshinoLabs.Sardinal.Udon {
     internal class ArraySerializer<T> : UdonSharp.Serialization.Serializer<T[]> {
         public ArraySerializer(TypeSerializationMetadata typeMetadata)
             : base(typeMetadata) {
