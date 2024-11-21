@@ -1,7 +1,7 @@
 {
   "name": "com.hoshinolabs.sardinal",
   "displayName": "HoshinoLabs - Sardinal",
-  "version": "0.8.2",
+  "version": "0.9.0",
   "unity": "2022.3",
   "description": "Sardinal is a messaging system for Unity C#, VRChat Udon(U#). It supports Pub/Sub with parameters.",
   "documentationUrl": "https://github.com/hoshinolabs/Sardinal",
@@ -15,6 +15,6 @@
   },
   "vpmDependencies": {
     "com.vrchat.worlds": ">=3.7.2",
-    "com.hoshinolabs.sardinject": ">=0.8.1"
+    "com.hoshinolabs.sardinject": ">=0.8.3"
   }
 }

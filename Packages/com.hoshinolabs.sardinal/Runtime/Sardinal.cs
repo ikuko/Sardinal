@@ -12,60 +12,21 @@ namespace HoshinoLabs.Sardinal {
             this.subscriberData = subscriberData;
         }
 
-        public void Publish(SignalId id, params object[] args) {
-            if (id == null) {
-                Logger.LogError("Attempting to use an invalid signal id");
-                return;
-            }
-            var _id = $"{id.GetTopic().ComputeHashMD5()}.";
-
+        internal void Publish(string topic, object channel, params object[] args) {
             var argsLength = args.Length;
             for (var i = 0; i < argsLength; i++) {
-                _id += $"__{args[i].GetType().FullName.Replace(".", "")}";
+                topic += $"__{args[i].GetType().FullName.Replace(".", "")}";
             }
 
-            if (!subscriberData.TryGetValue(_id, out var data)) {
+            if (!subscriberData.TryGetValue(topic, out var data)) {
                 return;
             }
-            foreach (var x in data) {
+            foreach (var x in data.Where(x => channel == null || x.Channel == null || x.Channel.Equals(channel))) {
                 x.Schema.MethodInfo.Invoke(x.Receiver, args);
             }
         }
 
-        public void PublishWithChannel(SignalId id, object channel, params object[] args) {
-            if (id == null) {
-                Logger.LogError("Attempting to use an invalid signal id");
-                return;
-            }
-            var _id = $"{id.GetTopic().ComputeHashMD5()}.";
-
-            var argsLength = args.Length;
-            for (var i = 0; i < argsLength; i++) {
-                _id += $"__{args[i].GetType().FullName.Replace(".", "")}";
-            }
-
-            if (!subscriberData.TryGetValue(_id, out var data)) {
-                return;
-            }
-            foreach (var x in data.Where(x => x.Channel == null || x.Channel.Equals(channel))) {
-                x.Schema.MethodInfo.Invoke(x.Receiver, args);
-            }
-        }
-
-        public void Subscribe(object subscriber) {
-            if (!subscriberSchema.TryGetValue(subscriber.GetType(), out var schemas)) {
-                return;
-            }
-            foreach (var x in schemas) {
-                if (!subscriberData.TryGetValue(x.Signature, out var data)) {
-                    data = new();
-                    subscriberData.Add(x.Signature, data);
-                }
-                data.Add(new SubscriberData(subscriber, null, x));
-            }
-        }
-
-        public void SubscribeWithChannel(object channel, object subscriber) {
+        internal void Subscribe(object channel, object subscriber) {
             if (!subscriberSchema.TryGetValue(subscriber.GetType(), out var schemas)) {
                 return;
             }
@@ -78,7 +39,7 @@ namespace HoshinoLabs.Sardinal {
             }
         }
 
-        public void Unsubscribe(object subscriber) {
+        internal void Unsubscribe(object subscriber) {
             if (!subscriberSchema.TryGetValue(subscriber.GetType(), out var schemas)) {
                 return;
             }

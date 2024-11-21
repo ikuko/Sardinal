@@ -8,6 +8,7 @@ namespace HoshinoLabs.Sardinal {
 
         public void Install(ContainerBuilder builder) {
             builder.OverrideSardinalInjection();
+            builder.Register(typeof(Signal<>), Lifetime.Transient);
             Installers?.Invoke(builder);
         }
     }

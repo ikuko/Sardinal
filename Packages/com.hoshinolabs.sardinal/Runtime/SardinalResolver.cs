@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace HoshinoLabs.Sardinal {
-    internal sealed class SardinalResolver : IResolver {
+    internal sealed class SardinalResolver : IBindingResolver {
         static Sardinal sardinal;
         static Dictionary<Type, List<SubscriberSchema>> subscriberSchema;
         static Dictionary<string, List<SubscriberData>> subscriberData;
@@ -22,14 +22,11 @@ namespace HoshinoLabs.Sardinal {
             UnityInjector.OnSceneContainerBuilt += SceneContainerBuilt;
         }
 
-        static void SceneContainerBuilt(Scene scene, Container _) {
-            SceneContainerBuilt(scene);
-        }
-
-        static void SceneContainerBuilt(Scene scene) {
+        static void SceneContainerBuilt(Scene scene, Container container) {
             if (sardinal == null) {
                 return;
             }
+
             var _subscriberData = BuildSubscriberData(scene)
                 .GroupBy(x => x.Schema.Signature);
             foreach (var x in _subscriberData) {
@@ -41,7 +38,7 @@ namespace HoshinoLabs.Sardinal {
             }
         }
 
-        public object Resolve(Container _) {
+        public object Resolve(Type type, Container container) {
             subscriberSchema = BuildSubscriberSchema();
             subscriberData = new();
             sardinal = new Sardinal(subscriberSchema, subscriberData);

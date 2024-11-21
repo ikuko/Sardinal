@@ -1,15 +1,15 @@
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
 namespace HoshinoLabs.Sardinal {
-    [CustomPropertyDrawer(typeof(SignalId))]
-    internal sealed class SignalIdDrawer : PropertyDrawer {
+    [CustomPropertyDrawer(typeof(Signal<>))]
+    internal sealed class SignalDrawer : PropertyDrawer {
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
             EditorGUI.BeginProperty(position, label, property);
-
             using (new EditorGUI.DisabledGroupScope(true)) {
-                var topicProperty = property.FindPropertyRelative("topic");
-                EditorGUI.PropertyField(position, topicProperty, label);
+                var topic = fieldInfo.FieldType.GetGenericArguments().First();
+                EditorGUI.LabelField(position, label, new GUIContent($"<{topic.FullName}>"));
             }
             EditorGUI.EndProperty();
         }

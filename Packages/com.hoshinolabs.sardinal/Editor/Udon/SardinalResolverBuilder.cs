@@ -11,7 +11,7 @@ namespace HoshinoLabs.Sardinal.Udon {
             this.destination = destination;
         }
 
-        public IResolver Build() {
+        public IBindingResolver Build() {
             return new SardinalResolver(destination);
         }
     }

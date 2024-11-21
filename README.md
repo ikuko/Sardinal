@@ -72,12 +72,10 @@ public class HelloSardine : UdonSharpBehaviour {
 ```csharp
 public class SardinalDemo : UdonSharpBehaviour {
   [Inject, SerializeField, HideInInspector]
-  Sardinal sardinal;
-  [SerializeField]
-  SignalId signalId = new SignalId<MySignal>();
+  Signal<MySignal> signal;
 
   private void Start() {
-    sardinal.Publish(signalId, $"Sardinal");
+    signal.Publish($"Sardinal");
   }
 }
 ```
@@ -116,9 +114,7 @@ public interface MySignal { }
 ```csharp
 public class HelloSardine : UdonSharpBehaviour {
   [Inject, SerializeField, HideInInspector]
-  Sardinal sardinal;
-  [SerializeField]
-  SignalId signalId = new SignalId<MySignal>();
+  Signal<MySignal> signal;
 
   private void Start() {
     Subscribe();
@@ -126,11 +122,11 @@ public class HelloSardine : UdonSharpBehaviour {
   }
 
   public void Subscribe() {
-    sardinal.Subscribe(signalId, this);
+    signal.Subscribe(this);
   }
 
   public void Unsubscribe() {
-    sardinal.Unsubscribe(signalId, this);
+    signal.Unsubscribe(this);
   }
 
   [Subscriber(typeof(MySignal))]
@@ -143,16 +139,14 @@ public class HelloSardine : UdonSharpBehaviour {
 ```csharp
 public class SardinalDemo : UdonSharpBehaviour {
   [Inject, SerializeField, HideInInspector]
-  Sardinal sardinal;
-  [SerializeField]
-  SignalId signalId = new SignalId<MySignal>();
+  Signal<MySignal> signal;
 
   private void Start() {
     Publish();
   }
 
   public void Publish() {
-    sardinal.Publish(signalId, $"Sardinal");
+    signal.Publish($"Sardinal");
     SendCustomEventDelayedSeconds(nameof(Publish), 1f);
   }
 }
@@ -173,7 +167,6 @@ public class CustomInstaller : MonoBehaviour, IInstaller {
 実行するとコンソールに以下のように表示されます。
 
 ```bash
-Hello Sardinal.
 Hello Sardinal.
 Hello Sardinal.
 Hello Sardinal.

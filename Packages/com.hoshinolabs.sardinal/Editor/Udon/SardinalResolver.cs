@@ -10,7 +10,7 @@ using UnityEngine.SceneManagement;
 using VRC.Udon.Common.Interfaces;
 
 namespace HoshinoLabs.Sardinal.Udon {
-    internal sealed class SardinalResolver : IResolver {
+    internal sealed class SardinalResolver : IBindingResolver {
         public readonly ComponentDestination Destination;
 
         static object instance;
@@ -53,7 +53,7 @@ namespace HoshinoLabs.Sardinal.Udon {
             });
         }
 
-        public object Resolve(Container container) {
+        public object Resolve(Type type, Container container) {
             var transform = Destination.Transform.Resolve<Transform>(container);
 
             subscriberSchema = BuildSubscriberSchema();
@@ -63,7 +63,7 @@ namespace HoshinoLabs.Sardinal.Udon {
 
             instance = container.Scope(builder => {
                 builder.RegisterComponentOnNewGameObject(
-                    Sardinal.ImplementationType,
+                    typeof(Sardinal).GetCustomAttribute<Sardinject.Udon.ImplementationTypeAttribute>().ImplementationType,
                     Lifetime.Transient,
                     $"{typeof(Sardinal).Name}"
                 )
