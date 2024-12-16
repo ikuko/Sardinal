@@ -71,8 +71,8 @@ public class HelloSardine : UdonSharpBehaviour {
 
 ```csharp
 public class SardinalDemo : UdonSharpBehaviour {
-  [Inject, SerializeField, HideInInspector]
-  Signal<MySignal> signal;
+  [SerializeField]
+  Signal signal = new Signal<MySignal>();
 
   private void Start() {
     signal.Publish($"Sardinal");
@@ -113,8 +113,8 @@ public interface MySignal { }
 
 ```csharp
 public class HelloSardine : UdonSharpBehaviour {
-  [Inject, SerializeField, HideInInspector]
-  Signal<MySignal> signal;
+  [SerializeField]
+  Signal signal = new Signal<MySignal>();
 
   private void Start() {
     Subscribe();
@@ -138,8 +138,8 @@ public class HelloSardine : UdonSharpBehaviour {
 
 ```csharp
 public class SardinalDemo : UdonSharpBehaviour {
-  [Inject, SerializeField, HideInInspector]
-  Signal<MySignal> signal;
+  [SerializeField]
+  Signal signal = new Signal<MySignal>();
 
   private void Start() {
     Publish();

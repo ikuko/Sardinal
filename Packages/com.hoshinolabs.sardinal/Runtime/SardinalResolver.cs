@@ -3,27 +3,35 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace HoshinoLabs.Sardinal {
     internal sealed class SardinalResolver : IBindingResolver {
-        static Sardinal sardinal;
+        static Lazy<Sardinal> sardinal;
+        static object instance;
         static Dictionary<Type, List<SubscriberSchema>> subscriberSchema;
         static Dictionary<string, List<SubscriberData>> subscriberData;
 
         public SardinalResolver() {
+            sardinal = null;
+            instance = null;
 
-        }
-
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-        static void OnSubsystemRegistration() {
+            UnityInjector.OnProjectContainerBuilt -= ProjectContainerBuilt;
+            UnityInjector.OnProjectContainerBuilt += ProjectContainerBuilt;
             UnityInjector.OnSceneContainerBuilt -= SceneContainerBuilt;
             UnityInjector.OnSceneContainerBuilt += SceneContainerBuilt;
         }
 
+        static void ProjectContainerBuilt(Container container) {
+            sardinal = new(() => container.Resolve<Sardinal>());
+        }
+
+        public static Sardinal Resolve() {
+            return sardinal.Value;
+        }
+
         static void SceneContainerBuilt(Scene scene, Container container) {
-            if (sardinal == null) {
+            if (instance == null) {
                 return;
             }
 
@@ -41,8 +49,8 @@ namespace HoshinoLabs.Sardinal {
         public object Resolve(Type type, Container container) {
             subscriberSchema = BuildSubscriberSchema();
             subscriberData = new();
-            sardinal = new Sardinal(subscriberSchema, subscriberData);
-            return sardinal;
+            instance = new Sardinal(subscriberSchema, subscriberData);
+            return instance;
         }
 
         Dictionary<Type, List<SubscriberSchema>> BuildSubscriberSchema() {

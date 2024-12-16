@@ -1,12 +1,13 @@
-using HoshinoLabs.Sardinject;
 using System;
-using UnityEngine;
 
 namespace HoshinoLabs.Sardinal {
     [Serializable]
     public sealed class Signal<T> {
-        [Inject, SerializeField, HideInInspector]
         Sardinal sardinal;
+
+        public Signal() {
+            sardinal = SardinalResolver.Resolve();
+        }
 
         object channel;
 

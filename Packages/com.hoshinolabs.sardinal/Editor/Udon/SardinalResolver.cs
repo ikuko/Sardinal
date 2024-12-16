@@ -4,7 +4,6 @@ using System.Linq;
 using System.Reflection;
 using UdonSharp;
 using UdonSharp.Internal;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using VRC.Udon.Common.Interfaces;
@@ -19,10 +18,9 @@ namespace HoshinoLabs.Sardinal.Udon {
 
         public SardinalResolver(ComponentDestination destination) {
             Destination = destination;
-        }
 
-        [InitializeOnLoadMethod]
-        static void OnLoad() {
+            instance = null;
+
             UnityInjector.OnSceneContainerBuilt -= SceneContainerBuilt;
             UnityInjector.OnSceneContainerBuilt += SceneContainerBuilt;
         }

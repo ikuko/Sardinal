@@ -26,7 +26,6 @@ namespace HoshinoLabs.Sardinal.Udon {
                     }
                     return rootGo.transform;
                 });
-            builder.Register(typeof(Signal<>), Lifetime.Transient);
         }
     }
 }
