@@ -7,7 +7,7 @@
       "version": "3.7.2"
     },
     "com.hoshinolabs.sardinject": {
-      "version": "0.8.0"
+      "version": "0.8.5"
     }
   },
   "locked": {
@@ -26,7 +26,7 @@
       "dependencies": {}
     },
     "com.hoshinolabs.sardinject": {
-      "version": "0.8.0",
+      "version": "0.8.5",
       "dependencies": {
         "com.vrchat.worlds": ">=3.7.2"
       }
