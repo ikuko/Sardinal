@@ -1,7 +1,7 @@
 # Sardinal
 
 ![](https://img.shields.io/badge/unity-2022.3+-000.svg)
-[![Releases](https://img.shields.io/github/release/hoshinolabs/Sardinal.svg)](https://github.com/hoshinolabs/Sardinal/releases)
+[![Releases](https://img.shields.io/github/release/ikuko/Sardinal.svg)](https://github.com/ikuko/Sardinal/releases)
 
 Sardinal is a messaging system for <a href="https://unity.com/">Unity C#</a>, <a href="https://udonsharp.docs.vrchat.com/">VRChat Udon(U#)</a>. It supports Pub/Sub with parameters.  
   
@@ -35,7 +35,7 @@ vpm add com.hoshinolabs.sardinal
 
 ### Install manually (using .unitypackage)
 
-1. Download the .unitypackage from [releases](https://github.com/hoshinolabs-vrchat/Sardinal/releases) page.
+1. Download the .unitypackage from [releases](https://github.com/ikuko/Sardinal/releases) page.
 2. Open .unitypackage
 
 ### Install manually (UPM)
@@ -43,13 +43,13 @@ vpm add com.hoshinolabs.sardinal
 以下を UPM でインストールします。
 
 ```
-https://github.com/hoshinolabs/Sardinal.git?path=Packages/com.hoshinolabs.sardinal
+https://github.com/ikuko/Sardinal.git?path=Packages/com.hoshinolabs.sardinal
 ```
 
 Sardinal はリリースタグを使用するので以下のようにバージョンを指定できます。
 
 ```
-https://github.com/hoshinolabs/Sardinal.git?path=Packages/com.hoshinolabs.sardinal#1.0.0
+https://github.com/ikuko/Sardinal.git?path=Packages/com.hoshinolabs.sardinal#1.0.0
 ```
 
 ## Basic Usage
