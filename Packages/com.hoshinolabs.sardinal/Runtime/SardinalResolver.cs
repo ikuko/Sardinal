@@ -67,7 +67,8 @@ namespace HoshinoLabs.Sardinal {
                                 signature += $"__{parameter.ParameterType.FullName.Replace(".", "")}";
                             }
                             var channel = attribute.Channel;
-                            return new SubscriberSchema(signature, channel, type, method);
+                            var networked = method.GetCustomAttribute<NetworkedAttribute>() != null;
+                            return new SubscriberSchema(signature, channel, type, method, networked);
                         })
                         .ToArray();
                 })

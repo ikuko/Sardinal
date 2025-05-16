@@ -6,6 +6,7 @@ using UdonSharp;
 using UdonSharp.Internal;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using VRC.SDK3.UdonNetworkCalling;
 using VRC.Udon.Common.Interfaces;
 
 namespace HoshinoLabs.Sardinal.Udon {
@@ -115,7 +116,9 @@ namespace HoshinoLabs.Sardinal.Udon {
                                     return parameterSymbol;
                                 })
                                 .ToArray();
-                            return new SubscriberSchema(signature, channel, type, methodSymbol, parameterSymbols);
+                            var networked = method.GetCustomAttribute<NetworkedAttribute>() != null
+                                || method.GetCustomAttribute<NetworkCallableAttribute>() != null;
+                            return new SubscriberSchema(signature, channel, type, methodSymbol, parameterSymbols, networked);
                         })
                         .ToArray();
                 })

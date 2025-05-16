@@ -7,12 +7,14 @@ namespace HoshinoLabs.Sardinal {
         public readonly object Channel;
         public readonly Type Type;
         public readonly MethodInfo MethodInfo;
+        public readonly bool Networked;
 
-        public SubscriberSchema(string signature, object channel, Type type, MethodInfo methodInfo) {
+        public SubscriberSchema(string signature, object channel, Type type, MethodInfo methodInfo, bool networked) {
             Signature = signature;
             Channel = channel;
             Type = type;
             MethodInfo = methodInfo;
+            Networked = networked;
         }
     }
 }
