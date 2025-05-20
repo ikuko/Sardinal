@@ -30,6 +30,10 @@ namespace HoshinoLabs.Sardinal.Udon {
         string[] _9;
         [Inject, SerializeField, HideInInspector]
         string[][] _10;
+        [Inject, SerializeField, HideInInspector]
+        string[][] _11;
+        [Inject, SerializeField, HideInInspector]
+        bool[] _12;
 
         internal void Publish(string topic, object channel, params object[] args) {
             var argsLength = args.Length;
@@ -119,11 +123,11 @@ namespace HoshinoLabs.Sardinal.Udon {
             var udonId = subscriber.GetUdonTypeID();
             var receiver = (IUdonEventReceiver)(object)subscriber;
             for (var i = 0; i < _6; i++) {
-                var __1 = _7[i];
-                if (!__1.StartsWith(topic) || _8[i] != udonId) {
+                var __7 = _7[i];
+                if (!__7.StartsWith(topic) || _8[i] != udonId) {
                     continue;
                 }
-                var idx = Array.IndexOf(_1, __1);
+                var idx = Array.IndexOf(_1, __7);
                 if (idx < 0) {
                     continue;
                 }

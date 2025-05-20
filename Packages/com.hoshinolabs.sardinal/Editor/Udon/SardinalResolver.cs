@@ -48,7 +48,9 @@ namespace HoshinoLabs.Sardinal.Udon {
                     .WithParameter("_7", schemaData._1)
                     .WithParameter("_8", schemaData._2)
                     .WithParameter("_9", schemaData._3)
-                    .WithParameter("_10", schemaData._4);
+                    .WithParameter("_10", schemaData._4)
+                    .WithParameter("_11", schemaData._5)
+                    .WithParameter("_12", schemaData._6);
             });
         }
 
@@ -78,7 +80,9 @@ namespace HoshinoLabs.Sardinal.Udon {
                     .WithParameter("_7", schemaData._1)
                     .WithParameter("_8", schemaData._2)
                     .WithParameter("_9", schemaData._3)
-                    .WithParameter("_10", schemaData._4);
+                    .WithParameter("_10", schemaData._4)
+                    .WithParameter("_11", schemaData._5)
+                    .WithParameter("_12", schemaData._6);
             })
                 .Resolve<Sardinal>();
             return instance;
@@ -121,7 +125,13 @@ namespace HoshinoLabs.Sardinal.Udon {
                                     return parameterSymbol;
                                 })
                                 .ToArray();
-                            return new SubscriberSchema(signature, channel, type, methodSymbol, parameterSymbols);
+                            var parameterTypes = method.GetParameters()
+                                .Select(parameter => {
+                                    var parameterType = $"__{parameter.ParameterType.FullName.Replace(".", "")}";
+                                    return parameterType;
+                                })
+                                .ToArray();
+                            return new SubscriberSchema(signature, channel, type, methodSymbol, parameterSymbols, parameterTypes, networked);
                         })
                         .ToArray();
                 })
@@ -158,13 +168,15 @@ namespace HoshinoLabs.Sardinal.Udon {
                 );
         }
 
-        static (int _0, string[] _1, long[] _2, string[] _3, string[][] _4) BuildSchemaData(SubscriberSchema[] subscriberSchema) {
+        static (int _0, string[] _1, long[] _2, string[] _3, string[][] _4, string[][] _5, bool[] _6) BuildSchemaData(SubscriberSchema[] subscriberSchema) {
             return (
                 _0: subscriberSchema.Length,
                 _1: subscriberSchema.Select(x => x.Signature).ToArray(),
                 _2: subscriberSchema.Select(x => UdonSharpInternalUtility.GetTypeID(x.Type)).ToArray(),
                 _3: subscriberSchema.Select(x => x.MethodSymbol).ToArray(),
-                _4: subscriberSchema.Select(x => x.ParameterSymbols).ToArray()
+                _4: subscriberSchema.Select(x => x.ParameterSymbols).ToArray(),
+                _5: subscriberSchema.Select(x => x.ParameterTypes).ToArray(),
+                _6: subscriberSchema.Select(x => x.Networked).ToArray()
             );
         }
     }
