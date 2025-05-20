@@ -6,6 +6,7 @@ using UdonSharp;
 using UdonSharp.Internal;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using VRC.SDK3.UdonNetworkCalling;
 using VRC.Udon.Common.Interfaces;
 
 namespace HoshinoLabs.Sardinal.Udon {
@@ -83,6 +84,15 @@ namespace HoshinoLabs.Sardinal.Udon {
             return instance;
         }
 
+        string BuildMethodSymbol(MethodInfo[] methods, MethodInfo method) {
+            var exportMethods = methods
+                .Where(x => x.Name == method.Name)
+                .Where(x => 0 < x.GetParameters().Length)
+                .ToArray();
+            var methodId = Array.IndexOf(exportMethods, method);
+            return methodId < 0 ? method.Name : $"__{methodId}_{method.Name}";
+        }
+
         SubscriberSchema[] BuildSubscriberSchema() {
             return AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(x => x.GetTypes())
@@ -98,12 +108,8 @@ namespace HoshinoLabs.Sardinal.Udon {
                                 signature += $"__{parameter.ParameterType.FullName.Replace(".", "")}";
                             }
                             var channel = attribute.Channel;
-                            var exportMethods = methods
-                                .Where(x => x.Name == method.Name)
-                                .Where(x => 0 < x.GetParameters().Length)
-                                .ToArray();
-                            var methodId = Array.IndexOf(exportMethods, method);
-                            var methodSymbol = methodId < 0 ? method.Name : $"__{methodId}_{method.Name}";
+                            var networked = method.GetCustomAttribute<NetworkCallableAttribute>() != null;
+                            var methodSymbol = networked ? method.Name : BuildMethodSymbol(methods, method);
                             var parameterSymbols = method.GetParameters()
                                 .Select(parameter => {
                                     var exportParameters = methods
