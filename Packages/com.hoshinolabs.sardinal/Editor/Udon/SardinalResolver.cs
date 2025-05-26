@@ -6,6 +6,9 @@ using UdonSharp;
 using UdonSharp.Internal;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+#if VRC_SDK_WORLD_3_8_1
+using VRC.SDK3.UdonNetworkCalling;
+#endif
 using VRC.Udon.Common.Interfaces;
 
 namespace HoshinoLabs.Sardinal.Udon {
@@ -30,24 +33,23 @@ namespace HoshinoLabs.Sardinal.Udon {
                 return;
             }
 
-            subscriberData = subscriberData.Concat(BuildSubscriberData(scene))
+            subscriberData = subscriberData
+                .Concat(BuildSubscriberData(scene))
                 .ToArray();
-            var _subscriberData = BuildSubscriberData();
-            var schemaData = BuildSchemaData(subscriberSchema);
+            var data = BuildData();
 
             container.Scope(builder => {
                 builder.RegisterComponentInstance(instance)
-                    .WithParameter("_0", _subscriberData._0)
-                    .WithParameter("_1", _subscriberData._1)
-                    .WithParameter("_2", _subscriberData._2)
-                    .WithParameter("_3", _subscriberData._3)
-                    .WithParameter("_4", _subscriberData._4)
-                    .WithParameter("_5", _subscriberData._5)
-                    .WithParameter("_6", schemaData._0)
-                    .WithParameter("_7", schemaData._1)
-                    .WithParameter("_8", schemaData._2)
-                    .WithParameter("_9", schemaData._3)
-                    .WithParameter("_10", schemaData._4);
+                    .WithParameter("_0", data._0)
+                    .WithParameter("_1", data._1)
+                    .WithParameter("_2", data._2)
+                    .WithParameter("_3", data._3)
+                    .WithParameter("_4", data._4)
+                    .WithParameter("_5", data._5)
+                    .WithParameter("_6", data._6)
+                    .WithParameter("_7", data._7)
+                    .WithParameter("_8", data._8)
+                    .WithParameter("_9", data._9);
             });
         }
 
@@ -56,8 +58,7 @@ namespace HoshinoLabs.Sardinal.Udon {
 
             subscriberSchema = BuildSubscriberSchema();
             subscriberData = Array.Empty<SubscriberData>();
-            var _subscriberData = BuildSubscriberData();
-            var schemaData = BuildSchemaData(subscriberSchema);
+            var data = BuildData();
 
             instance = container.Scope(builder => {
                 builder.RegisterComponentOnNewGameObject(
@@ -67,20 +68,28 @@ namespace HoshinoLabs.Sardinal.Udon {
                 )
                     .As<Sardinal>()
                     .UnderTransform(transform)
-                    .WithParameter("_0", _subscriberData._0)
-                    .WithParameter("_1", _subscriberData._1)
-                    .WithParameter("_2", _subscriberData._2)
-                    .WithParameter("_3", _subscriberData._3)
-                    .WithParameter("_4", _subscriberData._4)
-                    .WithParameter("_5", _subscriberData._5)
-                    .WithParameter("_6", schemaData._0)
-                    .WithParameter("_7", schemaData._1)
-                    .WithParameter("_8", schemaData._2)
-                    .WithParameter("_9", schemaData._3)
-                    .WithParameter("_10", schemaData._4);
+                    .WithParameter("_0", data._0)
+                    .WithParameter("_1", data._1)
+                    .WithParameter("_2", data._2)
+                    .WithParameter("_3", data._3)
+                    .WithParameter("_4", data._4)
+                    .WithParameter("_5", data._5)
+                    .WithParameter("_6", data._6)
+                    .WithParameter("_7", data._7)
+                    .WithParameter("_8", data._8)
+                    .WithParameter("_9", data._9);
             })
                 .Resolve<Sardinal>();
             return instance;
+        }
+
+        string BuildMethodSymbol(MethodInfo[] methods, MethodInfo method) {
+            var exportMethods = methods
+                .Where(x => x.Name == method.Name)
+                .Where(x => 0 < x.GetParameters().Length)
+                .ToArray();
+            var methodId = Array.IndexOf(exportMethods, method);
+            return methodId < 0 ? method.Name : $"__{methodId}_{method.Name}";
         }
 
         SubscriberSchema[] BuildSubscriberSchema() {
@@ -98,12 +107,12 @@ namespace HoshinoLabs.Sardinal.Udon {
                                 signature += $"__{parameter.ParameterType.FullName.Replace(".", "")}";
                             }
                             var channel = attribute.Channel;
-                            var exportMethods = methods
-                                .Where(x => x.Name == method.Name)
-                                .Where(x => 0 < x.GetParameters().Length)
-                                .ToArray();
-                            var methodId = Array.IndexOf(exportMethods, method);
-                            var methodSymbol = methodId < 0 ? method.Name : $"__{methodId}_{method.Name}";
+#if VRC_SDK_WORLD_3_8_1
+                            var networked = method.GetCustomAttribute<NetworkCallableAttribute>() != null;
+                            var methodSymbol = networked ? method.Name : BuildMethodSymbol(methods, method);
+#else
+                            var methodSymbol = BuildMethodSymbol(methods, method);
+#endif
                             var parameterSymbols = method.GetParameters()
                                 .Select(parameter => {
                                     var exportParameters = methods
@@ -115,50 +124,57 @@ namespace HoshinoLabs.Sardinal.Udon {
                                     return parameterSymbol;
                                 })
                                 .ToArray();
-                            return new SubscriberSchema(signature, channel, type, methodSymbol, parameterSymbols);
-                        })
-                        .ToArray();
+                            var parameterTypes = method.GetParameters()
+                                .Select(parameter => {
+                                    var parameterType = $"__{parameter.ParameterType.FullName.Replace(".", "")}";
+                                    return parameterType;
+                                })
+                                .ToArray();
+#if VRC_SDK_WORLD_3_8_1
+                            return new SubscriberSchema(signature, channel, type, methodSymbol, parameterSymbols, parameterTypes, networked);
+#else
+                            return new SubscriberSchema(signature, channel, type, methodSymbol, parameterSymbols, parameterTypes, false);
+#endif
+                        });
                 })
                 .ToArray();
         }
 
         static SubscriberData[] BuildSubscriberData(Scene scene) {
             return subscriberSchema
-                .Select((schema, idx) => (schema, idx))
-                .GroupBy(x => x.schema.Type)
-                .SelectMany(schemas => {
+                .SelectMany(schema => {
                     return scene.GetRootGameObjects()
-                        .SelectMany(x => x.GetComponentsInChildren(schemas.Key, true))
+                        .SelectMany(x => x.GetComponentsInChildren(schema.Type, true))
                         .OfType<UdonSharpBehaviour>()
                         .Select(x => UdonSharpEditor.UdonSharpEditorUtility.GetBackingUdonBehaviour(x))
-                        .SelectMany(receiver => {
-                            return schemas
-                                .Select(x => new SubscriberData(x.schema.Signature, receiver, x.schema.Channel, x.idx));
-                        });
+                        .Select(x => {
+                            return new SubscriberData(schema.Signature, x, schema.Channel, 0);
+                        })
+                        .ToArray();
                 })
                 .ToArray();
         }
 
-        static (int _0, string[] _1, int[] _2, object[][] _3, IUdonEventReceiver[][] _4, int[][] _5) BuildSubscriberData() {
-            var _subscriberData = subscriberData
-                .GroupBy(x => x.Signature);
+        static (int _0, string[] _1, long[] _2, string[] _3, string[][] _4, string[][] _5, bool[] _6, int[] _7, object[][] _8, IUdonEventReceiver[][] _9) BuildData() {
+            var _ = subscriberSchema
+                .GroupJoin(subscriberData, x => x.Signature, y => y.Signature, (x, y) => {
+                    return (
+                        Schema: x,
+                        Subscribers: y
+                    );
+                })
+                .ToArray();
             return (
-                    _0: _subscriberData.Count(),
-                    _1: _subscriberData.Select(x => x.Key).ToArray(),
-                    _2: _subscriberData.Select(x => x.Count()).ToArray(),
-                    _3: _subscriberData.Select(x => x.Select(x => x.Channel).ToArray()).ToArray(),
-                    _4: _subscriberData.Select(x => x.Select(x => x.Receiver).ToArray()).ToArray(),
-                    _5: _subscriberData.Select(x => x.Select(x => x.SchemaId).ToArray()).ToArray()
-                );
-        }
-
-        static (int _0, string[] _1, long[] _2, string[] _3, string[][] _4) BuildSchemaData(SubscriberSchema[] subscriberSchema) {
-            return (
-                _0: subscriberSchema.Length,
-                _1: subscriberSchema.Select(x => x.Signature).ToArray(),
-                _2: subscriberSchema.Select(x => UdonSharpInternalUtility.GetTypeID(x.Type)).ToArray(),
-                _3: subscriberSchema.Select(x => x.MethodSymbol).ToArray(),
-                _4: subscriberSchema.Select(x => x.ParameterSymbols).ToArray()
+                _0: _.Length,
+                _1: _.Select(x => x.Schema.Signature).ToArray(),
+                _2: _.Select(x => UdonSharpInternalUtility.GetTypeID(x.Schema.Type)).ToArray(),
+                _3: _.Select(x => x.Schema.MethodSymbol).ToArray(),
+                _4: _.Select(x => x.Schema.ParameterSymbols).ToArray(),
+                _5: _.Select(x => x.Schema.ParameterTypes).ToArray(),
+                _6: _.Select(x => x.Schema.Networked).ToArray(),
+                _7: _.Select(x => x.Subscribers.Count()).ToArray(),
+                _8: _.Select(x => x.Subscribers.Select(x => x.Channel).ToArray()).ToArray(),
+                _9: _.Select(x => x.Subscribers.Select(x => x.Receiver).ToArray()).ToArray()
             );
         }
     }

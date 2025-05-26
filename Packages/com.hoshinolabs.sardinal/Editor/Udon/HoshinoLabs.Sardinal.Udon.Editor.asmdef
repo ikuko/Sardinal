@@ -22,6 +22,12 @@
     "defineConstraints": [
         "UDONSHARP"
     ],
-    "versionDefines": [],
+    "versionDefines": [
+        {
+            "name": "com.vrchat.worlds",
+            "expression": "3.8.1",
+            "define": "VRC_SDK_WORLD_3_8_1"
+        }
+    ],
     "noEngineReferences": false
 }
