@@ -25,8 +25,8 @@
     "versionDefines": [
         {
             "name": "com.vrchat.worlds",
-            "expression": "3.8.1",
-            "define": "VRC_SDK_WORLD_3_8_1"
+            "expression": "3.8.1-1",
+            "define": "VRC_SDK_WORLDS3_8_1_OR_NEWER"
         }
     ],
     "noEngineReferences": false

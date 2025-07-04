@@ -6,7 +6,7 @@ using UdonSharp;
 using UdonSharp.Internal;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-#if VRC_SDK_WORLD_3_8_1
+#if VRC_SDK_WORLDS3_8_1_OR_NEWER
 using VRC.SDK3.UdonNetworkCalling;
 #endif
 using VRC.Udon.Common.Interfaces;
@@ -107,7 +107,7 @@ namespace HoshinoLabs.Sardinal.Udon {
                                 signature += $"__{parameter.ParameterType.FullName.Replace(".", "")}";
                             }
                             var channel = attribute.Channel;
-#if VRC_SDK_WORLD_3_8_1
+#if VRC_SDK_WORLDS3_8_1_OR_NEWER
                             var networked = method.GetCustomAttribute<NetworkCallableAttribute>() != null;
                             var methodSymbol = networked ? method.Name : BuildMethodSymbol(methods, method);
 #else
@@ -130,7 +130,7 @@ namespace HoshinoLabs.Sardinal.Udon {
                                     return parameterType;
                                 })
                                 .ToArray();
-#if VRC_SDK_WORLD_3_8_1
+#if VRC_SDK_WORLDS3_8_1_OR_NEWER
                             return new SubscriberSchema(signature, channel, type, methodSymbol, parameterSymbols, parameterTypes, networked);
 #else
                             return new SubscriberSchema(signature, channel, type, methodSymbol, parameterSymbols, parameterTypes, false);
