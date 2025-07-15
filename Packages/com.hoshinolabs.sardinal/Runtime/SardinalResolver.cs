@@ -2,7 +2,6 @@ using HoshinoLabs.Sardinject;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using UnityEngine.SceneManagement;
 
 namespace HoshinoLabs.Sardinal {
@@ -56,21 +55,7 @@ namespace HoshinoLabs.Sardinal {
         Dictionary<Type, List<SubscriberSchema>> BuildSubscriberSchema() {
             return AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(x => x.GetTypes())
-                .SelectMany(type => {
-                    var methods = type.GetMethods(BindingFlags.Instance | BindingFlags.Public);
-                    return methods
-                        .Where(x => x.IsDefined(typeof(SubscriberAttribute)))
-                        .Select(method => {
-                            var attribute = method.GetCustomAttribute<SubscriberAttribute>();
-                            var signature = $"{attribute.Topic.FullName.ComputeHashMD5()}.";
-                            foreach (var parameter in method.GetParameters()) {
-                                signature += $"__{parameter.ParameterType.FullName.Replace(".", "")}";
-                            }
-                            var channel = attribute.Channel;
-                            return new SubscriberSchema(signature, channel, type, method);
-                        })
-                        .ToArray();
-                })
+                .SelectMany(x => x.GetSubscriberSchemas())
                 .GroupBy(x => x.Type)
                 .ToDictionary(x => x.Key, x => x.ToList());
         }
