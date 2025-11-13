@@ -3,11 +3,11 @@
     "com.vrchat.core.vpm-resolver": {
       "version": "0.1.29"
     },
-    "com.vrchat.worlds": {
-      "version": "3.8.2"
-    },
     "com.hoshinolabs.sardinject": {
-      "version": "0.8.10"
+      "version": "0.8.12"
+    },
+    "com.vrchat.worlds": {
+      "version": "3.9.0"
     }
   },
   "locked": {
@@ -15,21 +15,21 @@
       "version": "0.1.29",
       "dependencies": {}
     },
-    "com.vrchat.worlds": {
-      "version": "3.8.2",
-      "dependencies": {
-        "com.vrchat.base": "3.8.2"
-      }
-    },
-    "com.vrchat.base": {
-      "version": "3.8.2",
-      "dependencies": {}
-    },
     "com.hoshinolabs.sardinject": {
-      "version": "0.8.10",
+      "version": "0.8.12",
       "dependencies": {
         "com.vrchat.worlds": ">=3.7.5"
       }
+    },
+    "com.vrchat.worlds": {
+      "version": "3.9.0",
+      "dependencies": {
+        "com.vrchat.base": "3.9.0"
+      }
+    },
+    "com.vrchat.base": {
+      "version": "3.9.0",
+      "dependencies": {}
     }
   }
 }

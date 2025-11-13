@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c333ccfdd0cbdbc4ca30cef2dd6e6b9b, type: 3}
   m_Name: SardinalShim
   m_EditorClassIdentifier: 
-  serializedUdonProgramAsset: {fileID: 11400000, guid: 224d1bba83172d84abd5aa37b8d1b4e2,
+  serializedUdonProgramAsset: {fileID: 11400000, guid: 12de8e042fb986b4a8e83b1504db8ddd,
     type: 2}
   udonAssembly: 
   assemblyError: 

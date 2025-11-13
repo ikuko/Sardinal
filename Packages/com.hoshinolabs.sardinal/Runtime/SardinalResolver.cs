@@ -7,18 +7,26 @@ using UnityEngine.SceneManagement;
 namespace HoshinoLabs.Sardinal {
     internal sealed class SardinalResolver : IBindingResolver {
         static Lazy<Sardinal> sardinal;
-        static object instance;
         static Dictionary<Type, List<SubscriberSchema>> subscriberSchema;
         static Dictionary<string, List<SubscriberData>> subscriberData;
 
         public SardinalResolver() {
             sardinal = null;
-            instance = null;
+            subscriberSchema = BuildSubscriberSchema();
+            subscriberData = new();
 
             UnityInjector.OnProjectContainerBuilt -= ProjectContainerBuilt;
             UnityInjector.OnProjectContainerBuilt += ProjectContainerBuilt;
             UnityInjector.OnSceneContainerBuilt -= SceneContainerBuilt;
             UnityInjector.OnSceneContainerBuilt += SceneContainerBuilt;
+        }
+
+        static Dictionary<Type, List<SubscriberSchema>> BuildSubscriberSchema() {
+            return AppDomain.CurrentDomain.GetAssemblies()
+                .SelectMany(x => x.GetTypes())
+                .SelectMany(x => x.GetSubscriberSchemas())
+                .GroupBy(x => x.Type)
+                .ToDictionary(x => x.Key, x => x.ToList());
         }
 
         static void ProjectContainerBuilt(Container container) {
@@ -30,10 +38,6 @@ namespace HoshinoLabs.Sardinal {
         }
 
         static void SceneContainerBuilt(Scene scene, Container container) {
-            if (instance == null) {
-                return;
-            }
-
             var _subscriberData = BuildSubscriberData(scene)
                 .GroupBy(x => x.Schema.Signature);
             foreach (var x in _subscriberData) {
@@ -42,22 +46,12 @@ namespace HoshinoLabs.Sardinal {
                     subscriberData.Add(x.Key, data);
                 }
                 data.AddRange(x.ToList());
+                Resolve();
             }
         }
 
         public object Resolve(Type type, Container container) {
-            subscriberSchema = BuildSubscriberSchema();
-            subscriberData = new();
-            instance = new Sardinal(subscriberSchema, subscriberData);
-            return instance;
-        }
-
-        Dictionary<Type, List<SubscriberSchema>> BuildSubscriberSchema() {
-            return AppDomain.CurrentDomain.GetAssemblies()
-                .SelectMany(x => x.GetTypes())
-                .SelectMany(x => x.GetSubscriberSchemas())
-                .GroupBy(x => x.Type)
-                .ToDictionary(x => x.Key, x => x.ToList());
+            return new Sardinal(subscriberSchema, subscriberData);
         }
 
         static SubscriberData[] BuildSubscriberData(Scene scene) {
