@@ -32,7 +32,11 @@ namespace HoshinoLabs.Sardinal.Udon {
         internal void Publish(string topic, object channel, params object[] args) {
             var argsLength = args.Length;
             for (var i = 0; i < argsLength; i++) {
-                topic += $"__{args[i].GetType().FullName.Replace(".", "")}";
+                var arg = args[i];
+                var id = arg.GetType() == typeof(UdonSharpBehaviour)
+                    ? ((UdonSharpBehaviour)arg).GetUdonTypeName()
+                    : arg.GetType().FullName;
+                topic += $"__{id.Replace(".", "")}";
             }
 
             var idx = Array.IndexOf(_1, topic);
